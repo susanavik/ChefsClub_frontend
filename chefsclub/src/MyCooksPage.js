@@ -1,8 +1,15 @@
 import React from 'react'
 
-function MyCooksPage() {
+function MyCooksPage({cooks, setCooks, recipes}) {
+
+    console.log(recipes)
+
     return (
-        <h1>My cooks</h1>
+        <div>
+            <h1>My Cooks</h1>
+            <p>{cooks}</p>
+
+        </div>
     )
 }
 

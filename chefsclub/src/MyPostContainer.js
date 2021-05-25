@@ -2,8 +2,9 @@ import React, {useState} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 
 function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCooks, 
-    like, setLike, cooked, setCooked}) {
+    like, setLike, cooked, setCooked, currentUser, handleCookRecipe, updateLikes}) {
 
+    console.log(currentUser)
     
     const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
     const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
@@ -14,22 +15,27 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
     function handleLikeClick() {
         // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
 
-        const updatedLikes = {
-            likesCount: likesCount + 1
-            
-        }
         setLike(!like)
-        setLikesCount( likesCount +1)
 
-        fetch(`http://127.0.0.1:3006/recipes/${recipeObj.id}`, {
-            method: 'PATCH',
-            haeders: {
+        console.log(currentUser)
+        const updatedLikes = { 
+            user_id: currentUser.id,
+            recipe_id: recipeObj.id
+        }
+
+        setLikesCount(likesCount + 1)
+
+        fetch(`http://127.0.0.1:3006/likes`, {
+            method: 'POST',
+            headers: {
                 "Content-type": "application/json",
             },
             body: JSON.stringify(updatedLikes)
         })
         .then(response => response.json())
-        .then(onUpdateRecipe)
+        .then((data) => {
+            updateLikes(data)
+        })
     }
 
     function HandleToggle() {
@@ -44,14 +50,25 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
         //   );
     }
 
+    // const [cookedRecipeInfo, setCookedRecipeInfo] = useState([])
+    const isCooked = recipeObj.cooks.map((cook) => cook.id === currentUser.id)
+ 
+    console.log(isCooked)
+
     function handleCookedClick() {
+
+        handleCookRecipe(recipeObj.id)
+        // const cookedRecipeId = 
         setCooked(!cooked)
 
-        const updatedCooks = {
-            cooksCount: cooksCount + 1
-        }
+        setCooked({
+            ...recipeObj,
+            cooks: recipeObj.cooks.concat({id: currentUser.id})
+        })
 
-        setCooksCount(cooksCount+1)
+        const updatedCooks = {
+            cooksCount: recipeObj.cooksCount + 1
+        }
 
         fetch(`http://127.0.0.1:3006/recipes/${recipeObj.id}`, {
             method: 'PATCH',
@@ -61,19 +78,21 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
             body: JSON.stringify(updatedCooks)
         })
         .then(response => response.json())
-        .then(onUpdateRecipe)
+        .then(handleCookRecipe)
     }
-
 
     const [cookedData, setCookedData] = useState({
         comment: "",
         rating: 0,
     })
 
-
-    function handleCommentandRating(event) {
-        setCookedData({...cookedData,
-        [event.target.value]: event.target.value})
+    const [ratingValue, setRatingValue] = useState(0)
+    const [averageStars, setAverageStars] = useState(0)
+    const [stars, setStars] = useState(0)
+    
+    function handleComment(event) {
+        setCookedData({...cookedData, 
+        [event.target.commment]: event.target.value})
     }
 
     function handleSubmitComment(event) {
@@ -93,17 +112,17 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
         .then(onUpdateCook)
     }
 
-    const [ratingValue, setRatingValue] = useState(0)
-    const [averageStars, setAverageStars] = useState(0)
+    
+    // function getAverageRating() {
+    //     const sum = (accumulator, ratingValue) => accumulator + ratingValue
+    //     const ratings = recipeObj.cooks.map(cook => cook.stars)
+    //     const averageRating = ratings.reduce(sum) / ratings.length 
+    //     setAverageStars(averageRating)
+    //   }
 
-    const getAverageRating = () => {
-        const sum = (accumulator, ratingValue) => accumulator + ratingValue
+    const sum = (accumulator, ratingValue) => accumulator + ratingValue
         const ratings = recipeObj.cooks.map(cook => cook.stars)
         const averageRating = ratings.reduce(sum) / ratings.length 
-        setAverageStars(averageRating)
-      }
-
-    console.log(getAverageRating)
     // console.log(averageRating)
 
     return (
@@ -138,12 +157,15 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
                             <label>
                                 Cooked? Now share what you thought!
                                 <input type="text" name="comment" 
-                                onChange={handleCommentandRating} value={cookedData.comment} />
+                                onChange={handleComment} value={cookedData.comment} />
                             </label>
                             <label>
                                 Star Rating: 1 - 5
                                 <input type="number" name="rating" 
-                                onChange={handleCommentandRating} value={cookedData.rating} />
+                                onChange={(event, newValue) => {
+                                    setRatingValue(newValue)
+                                }} 
+                                value={cookedData.rating} />
                             </label>
                             <input type="submit" value="Post" />
                         </form>
@@ -162,7 +184,7 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
                         <h5>{recipeObj.time}</h5>
                         <p>{cooksCount}🍪</p>
                         <p>{likesCount}💗</p>
-                        <p>{getAverageRating} 🌟</p>
+                        <p>{averageRating} 🌟</p>
                         <p>{recipeObj.instructions}</p>
                     </div>
                 )}

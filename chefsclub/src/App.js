@@ -6,6 +6,8 @@ import FeedContainer from './FeedContainer';
 import Header from './Header';
 import PostDetails from './PostDetails';
 import NewPostForm from './NewPostForm';
+import MyCooksPage from './MyCooksPage';
+import MyLikesPage from './MyLikesPage';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
@@ -29,10 +31,13 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users")
+    fetch("http://localhost:3006/users/61")
         .then(res => res.json())
-        .then(setUsers)
-        .then(() => filteredUsers)
+        .then((data) => {
+          setCurrentUser(data)})
+        // .then((data) => {
+        //   console.log(currentUser)
+        //   filteredUsers(data)})
   }, [])
 
   function handleAddRecipe(newRecipe) {
@@ -44,6 +49,7 @@ function App() {
   }
 
   function handleUpdateRecipe(updatedRecipe) {
+    console.log(updatedRecipe)
     const updatedRecipes = recipes.map((recipe) => 
         recipe.id === updatedRecipe.id ? updatedRecipe : recipe
     )
@@ -51,18 +57,31 @@ function App() {
 }
 
   function updateCurrentRecipe(currentRecipeId) {
-      const filteredRecipe = recipes.filter((recipe) => recipe.id === currentRecipeId)[0]
-      setCurrentRecipe(filteredRecipe)
-      // console.log(currentRecipeId)
+      // const filteredRecipe = recipes.filter((recipe) => recipe.id === currentRecipeId)[0]
+      // setCurrentRecipe(filteredRecipe)
+      console.log(currentRecipeId)
+      
   }
 
-  
+  function updateLikes(likeObject) {
+      let newRecipes = recipes.map((recipe) => {
+        if (recipe.id === likeObject.recipe_id) {
+          let newLikes = [...recipe.likes, likeObject]
+          recipe.likes = newLikes
+          return recipe
+        } else {
+          return recipe
+        }
+      })
+      setRecipes(newRecipes)
+      console.log(newRecipes)
+  }
+
   const filteredUsers = () => {
     const currUser = users.filter((user) => user.id === 61)
+    // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
-
-  
 
   return (
     <div className="App">
@@ -83,15 +102,21 @@ function App() {
               />
           </Route>
           <Route exact path='/home'>
-            <Home recipes={recipes} currentUser={currentUser}
-            onUpdateRecipe={handleUpdateRecipe} onUpdateCook={handleCooked}
+            <Home recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
+            onUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
-            cooked={cooked} setCooked={setCooked}/>
+            cooked={cooked} setCooked={setCooked} users={users} />
             <Header />
           </Route>
           <Route path='/newpost'>
               <NewPostForm currentUser={currentUser} addRecipe={handleAddRecipe} onUpdateCook={handleCooked}/>
               <Header />
+          </Route>
+          <Route exact path='/mylikes'>
+              <MyLikesPage like={like} setLike={setLike} recipes={recipes} />
+          </Route>
+          <Route exact path='/mycooks'>
+              <MyCooksPage cooks={cooks} setCooks={setCooks} recipes={recipes} />
           </Route>
         </Switch>
       </BrowserRouter>
