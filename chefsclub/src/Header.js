@@ -7,7 +7,7 @@ function Header() {
             <Link to='/myfeed'>
                 <h3>My Feed</h3>
             </Link>
-            <Link to='/profile'>
+            <Link to='/home'>
                 <h3>Profile Page</h3>
             </Link>
             <Link to='/newpost'>

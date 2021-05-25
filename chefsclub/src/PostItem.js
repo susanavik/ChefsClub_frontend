@@ -1,15 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import { BrowserRouter, Route, Switch, Link} from 'react-router-dom';
-import PostDetails from './PostDetails';
+import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 
-function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
 
-    console.log(recipe)
+function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks, 
+    like, setLike, cooked, setCooked}) {
+
+    // console.log(recipe)
 
     const [details, setDetails] = useState(false)
     // const [open, toggleOpen] = useState(false)
-    const [like, setLike] = useState(false)
-    const [cooked, setCooked] = useState(false)
+    const [likesCount, setLikesCount] = useState(recipe.likes.length)
+    const [cooksCount, setCooksCount] = useState(recipe.cooks.length)
+    
+    let history = useHistory()
+
+    // console.log(history.location.pathname)
    
     function HandleToggle() {
 
@@ -26,20 +31,28 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
     // onClick={() => setLike(true)}
     // onClick={() => setLike(false)} 
 
-    function handleLikeClick() {
+    // const [countCooks, setCountCooks] = useState(recipe.cooks.filter(cook => cook.id === cook.id).length)
+    // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
 
-        const updatedRecipe = {
-            likes: recipe.likes + 1
+
+    function handleLikeClick() {
+        // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
+
+        const updatedLikes = {
+            likesCount: likesCount + 1
+            
         }
 
         setLike(!like)
+        setLikesCount( likesCount +1)
+        
 
         fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
             method: 'PATCH',
             haeders: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify(updatedRecipe)
+            body: JSON.stringify(updatedLikes)
         })
         .then(response => response.json())
         .then(onUpdateRecipe)
@@ -48,29 +61,33 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
     function handleCookedClick() {
         setCooked(!cooked)
 
-        const updatedRecipe = {
-            cooks: recipe.cooks + 1
+        const updatedCooks = {
+            cooksCount: cooksCount + 1
         }
+
+        setCooksCount(cooksCount+1)
 
         fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
             method: 'PATCH',
             haeders: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify(updatedRecipe)
+            body: JSON.stringify(updatedCooks)
         })
         .then(response => response.json())
         .then(onUpdateRecipe)
     }
 
-    const [cookedAtributes, setCookedAtributes] = useState({
+
+    const [cookedData, setCookedData] = useState({
         comment: "",
         rating: 0,
     })
 
+
     function handleCommentandRating(event) {
-        setCookedAtributes({...cookedAtributes,
-        [event.target.comment]: event.target.value})
+        setCookedData({...cookedData,
+        [event.target.value]: event.target.value})
     }
 
 
@@ -78,7 +95,7 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
         event.preventDefault()
 
         const newCooksObj = {
-            ...cookedAtributes,
+            ...cookedData,
         }
         
         fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
@@ -90,19 +107,25 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
         .then(response => response.json())
         .then(onUpdateCook)
     }
+    
+    function showPostDetails(id) {
+        history.push(`/myfeed/${recipe.id}`)
+    }
 
+    // console.log(count)
 
     return (
         <li className="post-li">
             <div className="image">
+                {/* <Link to={`myfeed/${recipe.id}`}> 
+                    {recipe.name}
+                </Link> */}
+                <h1 onClick={() => showPostDetails(recipe.id)}>{recipe.name}</h1>
+                <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
+                className='post-image'/>
                 <Link to="/home"> 
                     <span>✏️{recipe.user.name}</span>
                 </Link>
-                <Link to={`myfeed/${recipe.id}`}> 
-                    <h3>{recipe.name}</h3>
-                </Link>
-                <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
-                className='post-image'/>
                 <div>
                     { like ? (
                         <button onClick={handleLikeClick}
@@ -128,12 +151,12 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
                                 <label>
                                     Cooked? Now share what you thought!
                                     <input type="text" name="comment" 
-                                    onChange={handleCommentandRating} value={cookedAtributes.comment} />
+                                    onChange={handleCommentandRating} value={cookedData.comment} />
                                 </label>
                                 <label>
                                     Star Rating: 1 - 5
                                     <input type="number" name="rating" 
-                                    onChange={handleCommentandRating} value={cookedAtributes.rating} />
+                                    onChange={handleCommentandRating} value={cookedData.rating} />
                                 </label>
                                 <input type="submit" value="Post" />
                             </form>
@@ -150,8 +173,8 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook}) {
                 {details && (
                     <div>
                         <h5>{recipe.time}</h5>
-                        <p>Cooks</p>
-                        <p>Likes</p>
+                        <p>{cooksCount}🍪</p>
+                        <p>{likesCount}💗</p>
                     </div>
                 )}
                 <button onClick={HandleToggle}>
