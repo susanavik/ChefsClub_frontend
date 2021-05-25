@@ -19,7 +19,7 @@ function App() {
   const [users, setUsers] = useState([])
   const [currentUser, setCurrentUser] = useState({})
   const [like, setLike] = useState(false)
-  const [cooked, setCooked] = useState(false)
+  const [cooked, setCooked] = useState([])
 
   useEffect(() => {
     fetch("http://localhost:3006/recipes")
@@ -31,7 +31,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/61")
+    fetch("http://localhost:3006/users/64")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -48,6 +48,8 @@ function App() {
     setCooks([...cooks, newCooksObj])
   }
 
+  
+
   function handleUpdateRecipe(updatedRecipe) {
     console.log(updatedRecipe)
     const updatedRecipes = recipes.map((recipe) => 
@@ -63,6 +65,8 @@ function App() {
       
   }
 
+  // function updateCooks(currentR)
+
   function updateLikes(likeObject) {
       let newRecipes = recipes.map((recipe) => {
         if (recipe.id === likeObject.recipe_id) {
@@ -77,8 +81,27 @@ function App() {
       console.log(newRecipes)
   }
 
+  function updateCooks(cookObject) {
+    let newRecipes = recipes.map((recipe) => {
+      if (recipe.id === cookObject.recipe_id) {
+        let newCooks = [...recipe.cooks, cookObject]
+        recipe.cooks = newCooks
+        return recipe
+      } else {
+        return recipe
+      }
+    })
+    setRecipes(newRecipes)
+    // setCooks(newRecipes)
+    console.log(newRecipes)
+  }
+
+  // function filteredCooked() {
+  //   let cookedRecipes
+  // }
+
   const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 61)
+    const currUser = users.filter((user) => user.id === 64)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
@@ -105,7 +128,7 @@ function App() {
             <Home recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
             onUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
-            cooked={cooked} setCooked={setCooked} users={users} />
+            cooked={cooked} setCooked={setCooked} users={users} updateCooks={updateCooks} />
             <Header />
           </Route>
           <Route path='/newpost'>
@@ -116,7 +139,7 @@ function App() {
               <MyLikesPage like={like} setLike={setLike} recipes={recipes} />
           </Route>
           <Route exact path='/mycooks'>
-              <MyCooksPage cooks={cooks} setCooks={setCooks} recipes={recipes} />
+              <MyCooksPage cooked={cooked} cooks={cooks} setCooked={setCooked} recipes={recipes} />
           </Route>
         </Switch>
       </BrowserRouter>

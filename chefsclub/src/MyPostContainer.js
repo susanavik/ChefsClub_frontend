@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 
 function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCooks, 
-    like, setLike, cooked, setCooked, currentUser, handleCookRecipe, updateLikes}) {
+    like, setLike, cooked, setCooked, currentUser, updateCooks, updateLikes}) {
 
     console.log(currentUser)
     
@@ -57,28 +57,49 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
 
     function handleCookedClick() {
 
-        handleCookRecipe(recipeObj.id)
-        // const cookedRecipeId = 
         setCooked(!cooked)
 
-        setCooked({
-            ...recipeObj,
-            cooks: recipeObj.cooks.concat({id: currentUser.id})
-        })
-
-        const updatedCooks = {
-            cooksCount: recipeObj.cooksCount + 1
+        const updatedCooks = { 
+            user_id: currentUser.id,
+            recipe_id: recipeObj.id,
         }
 
-        fetch(`http://127.0.0.1:3006/recipes/${recipeObj.id}`, {
-            method: 'PATCH',
-            haeders: {
+        setCooksCount(cooksCount + 1)
+
+        fetch(`http://127.0.0.1:3006/cooks`, {
+            method: 'POST',
+            headers: {
                 "Content-type": "application/json",
             },
             body: JSON.stringify(updatedCooks)
         })
         .then(response => response.json())
-        .then(handleCookRecipe)
+        .then((data) => {
+            updateCooks(data)
+        })
+
+        // handleCookRecipe(recipeObj.id)
+        // // const cookedRecipeId = 
+        
+
+        // setCooked({
+        //     ...recipeObj,
+        //     cooks: recipeObj.cooks.concat({id: currentUser.id})
+        // })
+
+        // const updatedCooks = {
+        //     cooksCount: recipeObj.cooksCount + 1
+        // }
+
+        // fetch(`http://127.0.0.1:3006/recipes/${recipeObj.id}`, {
+        //     method: 'PATCH',
+        //     haeders: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(updatedCooks)
+        // })
+        // .then(response => response.json())
+        // .then(handleCookRecipe)
     }
 
     const [cookedData, setCookedData] = useState({
@@ -120,9 +141,9 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
     //     setAverageStars(averageRating)
     //   }
 
-    const sum = (accumulator, ratingValue) => accumulator + ratingValue
-        const ratings = recipeObj.cooks.map(cook => cook.stars)
-        const averageRating = ratings.reduce(sum) / ratings.length 
+    // const sum = (accumulator, ratingValue) => accumulator + ratingValue
+    //     const ratings = recipeObj.cooks.map(cook => cook.stars)
+    //     const averageRating = ratings.reduce(sum) / ratings.length 
     // console.log(averageRating)
 
     return (
@@ -184,7 +205,7 @@ function MyPostContainer({recipeObj, onUpdateRecipe, onUpdateCook, cooks, setCoo
                         <h5>{recipeObj.time}</h5>
                         <p>{cooksCount}🍪</p>
                         <p>{likesCount}💗</p>
-                        <p>{averageRating} 🌟</p>
+                        <p> 🌟</p>
                         <p>{recipeObj.instructions}</p>
                     </div>
                 )}

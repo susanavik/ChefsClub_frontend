@@ -6,9 +6,10 @@ import MyCooksPage from './MyCooksPage';
 import MyLikesPage from './MyLikesPage';
 
 function Home({recipes, setRecipes, currentUser, cooks, 
-    setCooks, like, setLike, cooked, setCooked, users, updateLikes}) {
+    setCooks, like, setLike, cooked, setCooked, users, updateCooks, updateLikes}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 61)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 64)
+    
 
     function handleCookRecipe(id) {
         const updatedRecipes = recipes.map((recipe) => {
@@ -34,7 +35,7 @@ function Home({recipes, setRecipes, currentUser, cooks,
                     {filteredRecipes.map((recipeObj) => (
                         <MyPostContainer recipeObj={recipeObj} key={recipeObj.id} 
                         cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} cooked={cooked} 
-                        setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} handleCookRecipe={handleCookRecipe}/>
+                        setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} updateCooks={updateCooks}/>
                     ))}
                 </ul>
             </div>

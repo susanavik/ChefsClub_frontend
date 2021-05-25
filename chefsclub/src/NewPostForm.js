@@ -22,7 +22,7 @@ function NewPostForm({addRecipe, currentUser, onUpdateCook}) {
             ingredients,
             user_id: currentUser.id,
             likes: 0,
-            cooks: 0
+            cooks: {comment: "", stars: 5}
         }
         
             fetch('http://127.0.0.1:3006/recipes/', {
