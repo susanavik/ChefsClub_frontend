@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 
 
-function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks, 
-    like, setLike, cooked, setCooked}) {
+function PostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCooks, updateCooks}) {
 
     // console.log(recipe)
 
@@ -11,6 +10,8 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks,
     // const [open, toggleOpen] = useState(false)
     const [likesCount, setLikesCount] = useState(recipe.likes.length)
     const [cooksCount, setCooksCount] = useState(recipe.cooks.length)
+    const [like, setLike] = useState(false)
+    const [cooked, setCooked] = useState(false)
     
     let history = useHistory()
 
@@ -55,7 +56,7 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks,
             body: JSON.stringify(updatedLikes)
         })
         .then(response => response.json())
-        .then(onUpdateRecipe)
+        .then(handleUpdateRecipe)
     }
 
     function handleCookedClick() {
@@ -75,7 +76,7 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks,
             body: JSON.stringify(updatedCooks)
         })
         .then(response => response.json())
-        .then(onUpdateRecipe)
+        .then(updateCooks)
     }
 
 
@@ -105,7 +106,7 @@ function PostItem({recipe, onUpdateRecipe, onUpdateCook, cooks, setCooks,
         })
 
         .then(response => response.json())
-        .then(onUpdateCook)
+        .then(handleUpdateRecipe)
     }
     
     function showPostDetails(id) {

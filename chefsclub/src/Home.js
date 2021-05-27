@@ -1,22 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import MyPostContainer from './MyPostContainer';
-import MyProfileDetails from './MyProfileDetails';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
 import MyCooksPage from './MyCooksPage';
 import MyLikesPage from './MyLikesPage';
 
 function Home({recipes, setRecipes, currentUser, cooks, 
-    setCooks, like, setLike, cooked, setCooked, users, updateCooks, updateLikes}) {
+    setCooks, like, setLike, cooked, setCooked, users, updateCooks, 
+    updateLikes, updateCooksArray, handleUpdateRecipe, onRemoveRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 64)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 74)
     
-
-    function handleCookRecipe(id) {
-        const updatedRecipes = recipes.map((recipe) => {
-          return recipe.id === id ? { ...recipe, isCooked: true } : recipe;
-        })
-        setRecipes(updatedRecipes);
-    }
+    // function handleCookRecipe(id) {
+    //     const updatedRecipes = recipes.map((recipe) => {
+    //       return recipe.id === id ? { ...recipe, isCooked: true } : recipe;
+    //     })
+    //     setRecipes(updatedRecipes);
+    // }
 
     return (
         <div>
@@ -35,7 +34,10 @@ function Home({recipes, setRecipes, currentUser, cooks,
                     {filteredRecipes.map((recipeObj) => (
                         <MyPostContainer recipeObj={recipeObj} key={recipeObj.id} 
                         cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} cooked={cooked} 
-                        setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} updateCooks={updateCooks}/>
+                        setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} 
+                        updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe} onRemoveRecipe={onRemoveRecipe}
+                        // updateCooksArray={updateCooksArray}
+                        />
                     ))}
                 </ul>
             </div>
