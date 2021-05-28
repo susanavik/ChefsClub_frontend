@@ -1,51 +1,79 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import MyCooksCard from './MyCooksCard'
 
-function MyCooksPage(props) {
+function MyCooksPage({currentUser}) {
 
+    // let cookIitem = currentUser.cooks.map((cook) => cook.recipe_id)
+
+   
     const [cookedRecipes, setCookedRecipes] = useState([])
-
-    // function updateCooksArray(cookObject) {
-    //     let cookedRecipes = recipes.map((recipe) => {
-    //       if (recipe.id === cookObject.recipe_id) {
-    //         let newCooks = [...recipe.cooks, cookObject]
-    //         recipe.cooks = newCooks
-    //         return recipe
-    //       } else {
-    //         return recipe
-    //       }
-    //     })
-    //     setRecipes(cookedRecipes)
-    //     console.log(cookedRecipes)
-    //   }
-
-    // const newRecipes = recipes.filter((recipe) => recipe.id !== id)
-    // console.log(newRecipes)
-
-    const user_id = props.currentUser.id;
-
-    // filter cooks
-    let myCooks = props.recipes.filter(item => {
-        let cooks = item.cooks;
-        let filtered = cooks.filter(row => row.user_id == user_id);        
-        
-        return filtered.length > 0;
-    });
-
-//    function updateCooksArray() {
-//         const cookedRecipesArr = cooks.filter((cook) => cook.user_id === 74)
-//         setCookedRecipes(cookedRecipesArr)
-//         console.log(cookedRecipesArr)
-//    }
+    const [myCooks, setMyCooks] = useState([])
 
     return (
         <div>
-            {
-            myCooks.map(item => (
+            {currentUser.cooks.map((cook) => (
                 <div>
-                    {item.name}
+                    <img src={cook.recipe.image} alt={cook.recipe.name} width="400" height="240" frameBorder="0" 
+                     className='post-image'/>
+                   <h3>{cook.recipe.name}</h3> 
+                    <p>{cook.comment}</p>   
                 </div>
             ))
+            // <img src={cook.image} alt={cook.name} width="400" height="240" frameBorder="0" 
+            //         className='post-image'/>
+            //     <h1>{recipeObj.name}</h1>
+            //     <p>{cooksCount}🍪</p>
+            //     <p>{likesCount}💗</p>
+            //     { like ? (
+            //     <button onClick={handleLikeClick}
+            //     className="like-button">
+            //         💗
+            //     </button>
+            //     ) : (
+            //     <button onClick={handleLikeClick}
+            //     className="like-button-active">
+            //         🤍
+            //     </button>
+            //     )
+            //     }
+            //     { cooked ? (
+            //         <div>
+            //             <button onClick={handleCookedClick}
+            //             className="cooked-button">
+            //             🍪
+            //             </button>
+            //         </div>
+            //     ) : (
+            //         <button onClick={handleCookedClick}
+            //         className="cooked-button-active">
+            //             ⚪
+            //         </button>
+            //     )
+            //     }   
+            // </li>
+            // <button onClick={handleDeleteClick} className="emoji-button delete">
+            //     🗑
+            // </button>
+            // <div>
+            //     {commentForm && (
+            //         <form onSubmit={handleSubmitComment} className="new-comment">
+            //         <label>
+            //             Cooked? Now share what you thought!
+            //             <input type="text" name="comment" 
+            //             onChange={(e) => setComment(e.target.value)} value={comment} />
+            //         </label>
+            //         <label>
+            //             Star Rating: 1 - 5
+            //             <input type="number" name="rating" 
+            //             onChange={(e) => setStars(e.target.value)} value={stars} />
+            //         </label>
+            //         <input type="submit" value="Post" />
+            //     </form>
+            //     )}
+            //     <button onClick={handleCommentToggle}>
+            //         Post Comment
+            //     </button>
+            // </div>
         }
         </div> 
     )

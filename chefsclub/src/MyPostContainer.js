@@ -1,19 +1,20 @@
 import React, {useState} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 import UpdateRecipeForm from './UpdateRecipeForm';
-import MyPostItem from './MyPostItem'
+import PostItem from './PostItem'
 
 function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, setCooks, 
-    currentUser, updateCooks, updateLikes, onRemoveRecipe}) {
+    currentUser, updateCooks, updateLikes, onRemoveRecipe, 
+    filteredCookedRecipes, filterLikedRecipes, onClickRecipe}) {
 
-    // console.log(cooks)
+    console.log(recipeObj)
     
     const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
     const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
     const [details, setDetails] = useState(false)
     // const [comments, setComments] = useState([])
     const [ingredients, setIngredients] = useState([])
-    const [selectedRecipe, setSelectedRecipe] = useState(null)
+    // const [selectedRecipe, setSelectedRecipe] = useState(null)
     const [like, setLike] = useState(false)
     const [cooked, setCooked] = useState(false)
 
@@ -40,11 +41,8 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
         .then(response => response.json())
         .then((data) => {
             updateLikes(data)
+            filterLikedRecipes(data)
         })
-    }
-
-    function HandleToggle() {
-        setDetails(!details)
     }
 
     const [editForm, setEditForm] = useState(false)
@@ -87,6 +85,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
             // updateCooksArray(data)
             updateCooks(data)
             // setCooked(data)
+            filteredCookedRecipes(data)
         })
     }
 
@@ -223,10 +222,11 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
             {details && (
                     <div>
                         <ul>
-                            {recipeObj.recipe_ingredients.map((ingredientObj) => {
-                                <MyPostItem ingredientObj={ingredientObj} ingredients={ingredientObj.ingredient} 
-                                recipeObj={recipeObj} cookObj={cookObj} />
-                            })}
+                            {/* <MyPostItem recipeObj={recipeObj} key={recipeObj.id} /> */}
+                            {/* {recipeObj.recipe_ingredients.map((ingredientObj) => {
+                                <MyPostItem key={recipeObj.id} id={recipeObj.id} ingredientObj={ingredientObj} 
+                                ingredients={ingredientObj.ingredient} recipeObj={recipeObj} cookObj={cookObj} />
+                            })} */}
                         </ul>
                         {/* <h5>{recipeObj.time}</h5>
                         <p>{cooksCount}🍪</p>
@@ -241,9 +241,12 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                         </ul> */}
                     </div>
                 )}
-                <button onClick={HandleToggle}>
-                    Show Post Details
-                </button>
+                <Link to={`/home/${recipeObj.id}`}>
+                    <button key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
+                        Show Post Details
+                    </button>
+                </Link>
+                
         </div>
     )
 }

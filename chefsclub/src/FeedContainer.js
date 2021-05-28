@@ -1,8 +1,8 @@
 import React from 'react';
-import PostItem from './PostItem';
+import FeedPostItem from './FeedPostItem';
 
 function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setLike, 
-    cooked, setCooked, updateCooks}) {
+    cooked, setCooked, updateCooks, onClickRecipe}) {
 
     // console.log(recipes)
     
@@ -15,9 +15,9 @@ function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setL
             <h1>Food Feed</h1>
             <ul>
                 {recipes.map((recipe) => (
-                    <PostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
+                    <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
                     cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
-                    cooked={cooked} setCooked={setCooked}/>
+                    cooked={cooked} setCooked={setCooked} onClickRecipe={onClickRecipe}/>
                 ))}
             </ul>
         </main>

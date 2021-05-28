@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Redirect, Route, Link} from 'react-router-dom';
-import MyProfile from './Home'
+// import MyProfile from './Home'
 
 
 function Login({recipes}) {

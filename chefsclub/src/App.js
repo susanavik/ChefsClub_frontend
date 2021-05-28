@@ -4,10 +4,11 @@ import Home from './Home';
 import Login from './Login';
 import FeedContainer from './FeedContainer';
 import Header from './Header';
-import PostDetails from './PostDetails';
+// import PostDetails from './PostDetails';
 import NewPostForm from './NewPostForm';
 import MyCooksPage from './MyCooksPage';
 import MyLikesPage from './MyLikesPage';
+import PostItem from './PostItem';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
@@ -19,6 +20,7 @@ function App() {
   const [users, setUsers] = useState([])
   const [currentUser, setCurrentUser] = useState({})
   const [cookedRecipe, setCookedRecipe] = useState({})
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null)
 
   useEffect(() => {
     fetch("http://localhost:3006/recipes")
@@ -46,6 +48,13 @@ function App() {
         //   filteredUsers(data)})
   }, [])
 
+  useEffect(() => {
+    fetch("http://localhost:3006/users")
+        .then(res => res.json())
+        .then((data) => {
+          setUsers(data)})
+  }, [])
+
   function handleAddRecipe(newRecipe) {
     setRecipes([...recipes, newRecipe])
   }
@@ -66,7 +75,6 @@ function App() {
       // const filteredRecipe = recipes.filter((recipe) => recipe.id === currentRecipeId)[0]
       // setCurrentRecipe(filteredRecipe)
       console.log(currentRecipeId)
-      
   }
 
   function updateCooks(cookObject) {
@@ -81,45 +89,65 @@ function App() {
     setRecipes(newRecipes)
   }
 
-  // function updateCooks(currentR)
-
-  const [likedRecipes, setLikedRecipes] = useState({})
+  const [likedRecipes, setLikedRecipes] = useState([])
 
   function updateLikes(likeObject) {
-      let newRecipes = recipes.map((recipe) => {
-        if (recipe.id === likeObject.recipe_id) {
-          let newLikes = [...recipe.likes, likeObject]
-          recipe.likes = newLikes
-          return recipe
-        } else {
-          return recipe
-        }
-      })
-      setLikedRecipes(newRecipes)
-      console.log(newRecipes)
+      setLikedRecipes(likeObject)
+      console.log(likeObject)
   }
 
-  const [cookedRecipes, setCookedRecipes] = useState({})
+  const [cookedRecipes, setCookedRecipes] = useState([])
   
-  function filteredCookedRecipes(cookedObj) {
-    let newRecipes = recipes.map((recipe) => {
-      if (recipe.id === cookedObj.recipe_id) {
-        let newCooks = [...recipe.cooks, cookedObj]
+  function filteredCookedRecipes(cooked) {
+    console.log(cooked)
+    let cookedRecipes = recipes.map((recipe) => {
+      if (recipe.id === cooked.recipe_id) {
+        let newCooks = [...recipe.cooks, cooked]
         recipe.cooks = newCooks
         return recipe
       } else {
         return recipe
       }
       })
-      setCookedRecipes(newRecipes)
+      console.log(cookedRecipes)
+      setCookedRecipes(cookedRecipes)
     }
 
+    function filterLikedRecipes(likedObj) {
+      let newRecipes = recipes.map((recipe) => {
+        if (recipe.id === likedObj.recipe_id) {
+          let newLikes = [...recipe.likes, likedObj]
+          recipe.likes = newLikes
+          return recipe
+        } else {
+          return recipe
+        }
+      })
+    }
 
   const filteredUsers = () => {
     const currUser = users.filter((user) => user.id === 74)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
+
+  // function findSelectedRecipe() {
+  //     // let selectedRecipe = recipes.find((recipe) => recipe.id ===  selectedRecipeId)
+  //     let selectedRecipe = recipes.find((recipe) => {
+  //       if (recipe.id === selectedRecipeId) {
+  //         let newRecipe = [...selectedRecipe]
+  //         return newRecipe
+  //       } else {
+  //         return recipe
+  //       }
+  //       })
+  //       console.log(selectedRecipe)
+  //       // setCookedRecipes(cookedRecipes)
+  //     setSelectedRecipeId(selectedRecipe)
+  // }
+
+  const selectedRecipe = recipes.find((recipe) => recipe.id === selectedRecipeId);
+
 
   return (
     <div className="App">
@@ -131,18 +159,21 @@ function App() {
           </Route>
           <Route exact path='/myfeed'>
             <FeedContainer recipes={recipes} onUpdateRecipe={handleUpdateRecipe}
-            cooks={cooks} setCooks={setCooks} updateCooks={updateCooks}/>
+            cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} onClickRecipe={setSelectedRecipeId}/>
             <Header />
           </Route>
           <Route exact path='/myfeed/:id'>
-              <PostDetails currentRecipe={currentRecipe} updateCurrentRecipe={updateCurrentRecipe}
+              <PostItem recipes={recipes}
+                recipe={selectedRecipe} 
+                currentUser={currentUser} 
               />
           </Route>
           <Route exact path='/home'>
             <Home recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
             handleUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} users={users} updateCooks={updateCooks} onRemoveRecipe={onRemoveRecipe}
-            // updateCooksArray={updateCooksArray} 
+            filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes} 
+            setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={setSelectedRecipeId}
             />
             <Header />
           </Route>
@@ -155,8 +186,14 @@ function App() {
           </Route>
           <Route exact path='/mycooks'>
               <MyCooksPage 
-              recipes={cookedRecipes} currentUser={currentRecipe} />
+              recipes={cookedRecipes} currentUser={currentUser} />
           </Route>
+            <Route exact path='/home/:id'>
+                <PostItem recipes={recipes}
+                recipe={selectedRecipe} 
+                currentUser={currentUser} />
+              </Route>
+        
         </Switch>
       </BrowserRouter>
     </div>

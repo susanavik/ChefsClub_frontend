@@ -1,188 +1,69 @@
-import React, {useState, useEffect} from 'react'
-import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
+import React, { useState } from 'react'
+import {useParams, Link} from "react-router-dom";
 
-
-function PostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCooks, updateCooks}) {
-
-    // console.log(recipe)
-
-    const [details, setDetails] = useState(false)
-    // const [open, toggleOpen] = useState(false)
-    const [likesCount, setLikesCount] = useState(recipe.likes.length)
-    const [cooksCount, setCooksCount] = useState(recipe.cooks.length)
-    const [like, setLike] = useState(false)
-    const [cooked, setCooked] = useState(false)
+function PostItem({recipe, recipes, currentUser}) {
+    // let match = useRouteMatch("/home/:id")
+    let { id } = useParams();
     
-    let history = useHistory()
+    // const [selectedRecipe, setSelectedRecipe] = useState(null)
 
-    // console.log(history.location.pathname)
-   
-    function HandleToggle() {
+    console.log(recipe.recipe_ingredients)
 
-        setDetails(!details)
-
-          return (
-            <details>
-              <summary>Summary</summary>
-              <p>Hidden content hidden content hidden content</p>
-            </details>
-          );
-    }
-
-    // onClick={() => setLike(true)}
-    // onClick={() => setLike(false)} 
-
-    // const [countCooks, setCountCooks] = useState(recipe.cooks.filter(cook => cook.id === cook.id).length)
-    // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
-
-
-    function handleLikeClick() {
-        // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
-
-        const updatedLikes = {
-            likesCount: likesCount + 1
-            
-        }
-
-        setLike(!like)
-        setLikesCount( likesCount +1)
-        
-
-        fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
-            method: 'PATCH',
-            haeders: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedLikes)
-        })
-        .then(response => response.json())
-        .then(handleUpdateRecipe)
-    }
-
-    function handleCookedClick() {
-        setCooked(!cooked)
-
-        const updatedCooks = {
-            cooksCount: cooksCount + 1
-        }
-
-        setCooksCount(cooksCount+1)
-
-        fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
-            method: 'PATCH',
-            haeders: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedCooks)
-        })
-        .then(response => response.json())
-        .then(updateCooks)
-    }
-
-
-    const [cookedData, setCookedData] = useState({
-        comment: "",
-        rating: 0,
+    const ingredientObj = recipe.recipe_ingredients.map((item) => {
+       return <li>{item.measurement} {item.ingredient.name}</li> 
     })
+    // const ingredientName = recipe.recipe_ingredients.map((item) => {
+    //     return <li>{item.ingredient.name}</li>
+    // })
 
-
-    function handleCommentandRating(event) {
-        setCookedData({...cookedData,
-        [event.target.value]: event.target.value})
-    }
-
-
-    function handleSubmitComment(event) {
-        event.preventDefault()
-
-        const newCooksObj = {
-            ...cookedData,
-        }
-        
-        fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newCooksObj),
-        })
-
-        .then(response => response.json())
-        .then(handleUpdateRecipe)
-    }
+    console.log(ingredientObj)
+    console.log(recipe.cooks)
     
-    function showPostDetails(id) {
-        history.push(`/myfeed/${recipe.id}`)
-    }
-
-    // console.log(count)
-
+    // id, name, time, image, instructions, user, recipe_ingredients
     return (
-        <li className="post-li">
-            <div className="image">
-                {/* <Link to={`myfeed/${recipe.id}`}> 
-                    {recipe.name}
-                </Link> */}
-                <h1 onClick={() => showPostDetails(recipe.id)}>{recipe.name}</h1>
+        <div>
+            <header>
+                <h1>Recipe Show Page</h1>
+                <Link to="/myfeed/">
+                    <h3>Back to my Feed</h3>
+                </Link>
+            </header>
+            <div className="recipe-details">
+                <h2>{recipe.name}</h2>
                 <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
                 className='post-image'/>
+                <h3>
                 <Link to="/home"> 
                     <span>✏️{recipe.user.name}</span>
                 </Link>
-                <div>
-                    { like ? (
-                        <button onClick={handleLikeClick}
-                        className="like-button">
-                            💗
-                        </button>
-                    ) : (
-                        <button onClick={handleLikeClick}
-                        className="like-button-active">
-                            🤍
-                        </button>
-                    )
-                    }
-                </div>
-                <div>
-                    { cooked ? (
-                        <div>
-                            <button onClick={handleCookedClick}
-                            className="cooked-button">
-                            🍪
-                            </button>
-                            <form onSubmit={handleSubmitComment} className="new-comment">
-                                <label>
-                                    Cooked? Now share what you thought!
-                                    <input type="text" name="comment" 
-                                    onChange={handleCommentandRating} value={cookedData.comment} />
-                                </label>
-                                <label>
-                                    Star Rating: 1 - 5
-                                    <input type="number" name="rating" 
-                                    onChange={handleCommentandRating} value={cookedData.rating} />
-                                </label>
-                                <input type="submit" value="Post" />
-                            </form>
-                        </div>
-                        
-                    ) : (
-                        <button onClick={handleCookedClick}
-                        className="cooked-button-active">
-                            ⚪
-                        </button>
-                    )
-                    }
-                </div>
-                {details && (
-                    <div>
-                        <h5>{recipe.time}</h5>
-                        <p>{cooksCount}🍪</p>
-                        <p>{likesCount}💗</p>
-                    </div>
-                )}
-                <button onClick={HandleToggle}>
-                    Show Post Details
-                </button>
+                </h3>
+                
+                <ul>
+                    <h3>Instructions</h3>
+                    {recipe.instructions}
+                </ul>
+                <ul>
+                    <h3>Ingredients</h3>
+                    <li>{ingredientObj}</li>
+                </ul>
+
+
             </div>
-        </li>
+        </div>
     )
+
+    // let history = useHistory()
+    // let {id} = useParams()
+
+    // console.log(id)
+    // console.log(currentRecipe)
+
+    // const [currentRecipeId, setCurrentRecipeId] = useState(parseInt(history.location.pathname.split("/")[2]))
+
+    // useEffect(() => {
+    //     updateCurrentRecipe(currentRecipeId)
+    // }, []) 
+
+    // //    console.log(currentRecipeId)
 }
-        export default PostItem;
+export default PostItem;
