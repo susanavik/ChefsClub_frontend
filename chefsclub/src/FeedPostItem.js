@@ -2,7 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
 
 
-function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCooks, updateCooks, onClickRecipe}) {
+function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, 
+    cooks, setCooks, updateCooks, onClickRecipe, currentUser, user}) {
+
+    console.log(user)
 
     // console.log(recipe)
     const [details, setDetails] = useState(false)
@@ -11,6 +14,8 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
     const [cooksCount, setCooksCount] = useState(recipe.cooks.length)
     const [like, setLike] = useState(false)
     const [cooked, setCooked] = useState(false)
+    const [stars, setStars] = useState(5)
+    const [comment, setComment] = useState("")
     let history = useHistory()
 
     // console.log(history.location.pathname)
@@ -80,19 +85,23 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
 
     function handleSubmitComment(event) {
         event.preventDefault()
+        // setCooked(!cooked)
 
-        const newCooksObj = {
-            ...cookedData,
+        const updateComments = {
+            user_id: currentUser.id,
+            recipe_id: recipe.id,
+            comment,
+            stars
         }
         
-        fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
+        fetch(`http://127.0.0.1:3006/cooks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newCooksObj),
+            body: JSON.stringify(updateComments),
         })
 
         .then(response => response.json())
-        .then(handleUpdateRecipe)
+        .then(updateCooks)
     }
     
     function showPostDetails(id) {
@@ -100,11 +109,11 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
     }
 
     const commentObj = recipe.cooks.map((cook) => {
-        return <li>{cook.comment}</li>
+        return <li>I give this recipe {cook.stars || 0} 🌟! {cook.comment} </li>
     })
 
-    console.log(recipe.cooks)
-    console.log(commentObj)
+    // console.log(recipe.cooks)
+    // console.log(commentObj)
 
     const [comments, setComments] = useState(false)
 
@@ -121,9 +130,10 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
                 <h1 onClick={() => showPostDetails(recipe.id)}>{recipe.name}</h1>
                 <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
                 className='post-image'/>
-                <Link to="/home"> 
+                <Link to={`/users/${recipe.user.id}`}> 
                     <span>✏️{recipe.user.name}</span>
                 </Link>
+                
                 <div>
                     { like ? (
                         <button onClick={handleLikeClick}
@@ -149,17 +159,16 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
                                 <label>
                                     Cooked? Now share what you thought!
                                     <input type="text" name="comment" 
-                                    onChange={handleCommentandRating} value={cookedData.comment} />
+                                    onChange={(e) => setComment(e.target.value)} value={comment} />
                                 </label>
                                 <label>
-                                    Star Rating: 1 - 5
+                                    Star Rating: 1 - 5s
                                     <input type="number" name="rating" 
-                                    onChange={handleCommentandRating} value={cookedData.rating} />
+                                    onChange={(e) => setStars(e.target.value)} value={stars} />
                                 </label>
                                 <input type="submit" value="Post" />
                             </form>
                         </div>
-                        
                     ) : (
                         <button onClick={handleCookedClick}
                         className="cooked-button-active">
@@ -173,18 +182,20 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, cooks, setCoo
                         <p>{cooksCount}🍪</p>
                         <p>{likesCount}💗</p>
                     </div>
-                    <div>
+                <div>
                     <div>
                     {comments && (
-                        <ul>{commentObj}</ul>
+                        <ul>{commentObj} </ul>
+
                     )}
                     <button onClick={handleShowComment}>
                             See Comments
                     </button>
-            </div>
+
+                </div>
                         
-                    </div>
-                <Link to={`/home/${recipe.id}`}>
+            </div>
+                <Link to={`/recipes/${recipe.id}`}>
                     <button onClick={() => onClickRecipe(recipe.id)}>
                         Show Post Details
                     </button>

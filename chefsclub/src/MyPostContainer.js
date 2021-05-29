@@ -7,7 +7,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
     currentUser, updateCooks, updateLikes, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, onClickRecipe}) {
 
-    console.log(recipeObj)
+    // console.log(recipeObj)
     
     const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
     const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
@@ -23,7 +23,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
 
         setLike(!like)
 
-        console.log(currentUser)
+        // console.log(currentUser)
         const updatedLikes = { 
             user_id: currentUser.id,
             recipe_id: recipeObj.id
@@ -241,7 +241,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                         </ul> */}
                     </div>
                 )}
-                <Link to={`/home/${recipeObj.id}`}>
+                <Link to={`/recipes/${recipeObj.id}`}>
                     <button key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
                         Show Post Details
                     </button>

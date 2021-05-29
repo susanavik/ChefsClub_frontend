@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
 
 function Home({recipes, setRecipes, currentUser, cooks, 
     setCooks, like, setLike, cooked, setCooked, users, updateCooks, 
-    updateLikes, updateCooksArray, handleUpdateRecipe, onRemoveRecipe, 
+    updateLikes, handleUpdateRecipe, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe}) {
 
     const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 74)

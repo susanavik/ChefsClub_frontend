@@ -13,6 +13,9 @@ function Header() {
             <Link to='/newpost'>
                 <h3>New Post</h3>
             </Link>
+            <Link to='/users'>
+                <h3>All Users</h3>
+            </Link>
         </header>
     )
 }

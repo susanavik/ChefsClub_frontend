@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import {useParams, Link} from "react-router-dom";
 
-function PostItem({recipe, recipes, currentUser}) {
+function PostItem({recipe, recipes, users, user, onClickUserId}) {
     // let match = useRouteMatch("/home/:id")
     let { id } = useParams();
     
-    // const [selectedRecipe, setSelectedRecipe] = useState(null)
-
-    console.log(recipe.recipe_ingredients)
+    // console.log(users)
+    // console.log(recipe)
 
     const ingredientObj = recipe.recipe_ingredients.map((item) => {
        return <li>{item.measurement} {item.ingredient.name}</li> 
@@ -15,9 +14,6 @@ function PostItem({recipe, recipes, currentUser}) {
     // const ingredientName = recipe.recipe_ingredients.map((item) => {
     //     return <li>{item.ingredient.name}</li>
     // })
-
-    console.log(ingredientObj)
-    console.log(recipe.cooks)
     
     // id, name, time, image, instructions, user, recipe_ingredients
     return (
@@ -33,9 +29,9 @@ function PostItem({recipe, recipes, currentUser}) {
                 <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
                 className='post-image'/>
                 <h3>
-                <Link to="/home"> 
-                    <span>✏️{recipe.user.name}</span>
-                </Link>
+                {/* <Link to={`/users/${user.id}`}> 
+                    <span onClick={() => onClickUserId(user.id)}>✏️{recipe.user.name}</span>
+                </Link> */}
                 </h3>
                 
                 <ul>
@@ -51,7 +47,6 @@ function PostItem({recipe, recipes, currentUser}) {
             </div>
         </div>
     )
-
     // let history = useHistory()
     // let {id} = useParams()
 
