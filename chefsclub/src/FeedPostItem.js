@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
-
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
 
 function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, 
     cooks, setCooks, updateCooks, onClickRecipe, currentUser, user}) {
@@ -122,7 +122,8 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
     }
 
     return (
-        <li className="post-li">
+                    
+        <Card className="post-li">
             <div className="image">
                 {/* <Link to={`myfeed/${recipe.id}`}> 
                     {recipe.name}
@@ -131,17 +132,18 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                 <img src={recipe.image} alt={recipe.name} width="400" height="240" frameBorder="0" 
                 className='post-image'/>
                 <Link to={`/users/${recipe.user.id}`}> 
+                    {/* <Image src={recipe.user.image} size='medium' bordered /> */}
                     <span>✏️{recipe.user.name}</span>
                 </Link>
-                
-                <div>
+
+                <div className="like-cook-div">
                     { like ? (
                         <button onClick={handleLikeClick}
                         className="like-button">
                             💗
                         </button>
                     ) : (
-                        <button onClick={handleLikeClick}
+                        <button  onClick={handleLikeClick}
                         className="like-button-active">
                             🤍
                         </button>
@@ -177,18 +179,18 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                     )
                     }
                 </div>
-                    <div>
+                    <div className="likes-and-cooks-div">
                         <h5>{recipe.time}</h5>
                         <p>{cooksCount}🍪</p>
                         <p>{likesCount}💗</p>
                     </div>
                 <div>
-                    <div>
+                    <div className="comment-div">
                     {comments && (
-                        <ul>{commentObj} </ul>
+                        <ul className="comment-ul">{commentObj} </ul>
 
                     )}
-                    <button onClick={handleShowComment}>
+                    <button className="show-toggle" onClick={handleShowComment}>
                             See Comments
                     </button>
 
@@ -196,12 +198,13 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                         
             </div>
                 <Link to={`/recipes/${recipe.id}`}>
-                    <button onClick={() => onClickRecipe(recipe.id)}>
+                    <button class="show-toggle" onClick={() => onClickRecipe(recipe.id)}>
                         Show Post Details
                     </button>
                 </Link>
             </div>
-        </li>
+            </Card>
+        
     )
 }
         export default FeedPostItem;

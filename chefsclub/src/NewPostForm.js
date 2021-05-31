@@ -1,27 +1,45 @@
 import React, {useState, useDebugValue} from 'react'
 import Modal from 'react-modal'
-import {Form, Button, FormGroup, FormControl} from 'react-bootstrap';
+// import {Form, Button, FormGroup, FormSelect} from 'react-bootstrap';
+// import { MultiSelect } from '@material-ui/core';
+import { Multiselect } from 'multiselect-react-dropdown';
 import FormCheck from 'react-bootstrap/FormCheck'
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form, FormField } from 'semantic-ui-react'
 
+function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook, 
+    ingredients, handleAddIngredient}) {
 
-function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook}) {
-
-    // console.log(currentUser)
+    console.log(ingredients)
 
     const [name, setName] = useState("")
     const [image, setImage] = useState("https://media.istockphoto.com/photos/assortment-of-fine-chocolate-candies-white-dark-and-milk-chocolate-picture-id1148258027?k=6&m=1148258027&s=612x612&w=0&h=NEiHmrApK8fRuf9ffg_XiJUXozlyi3QgLDgPJlGLuGE=")
     const [time, setTime] = useState("")
     const [instructions, setInstructions] = useState("")
     const [measurement, setMeasurement] = useState("")
-    const [ingredientName, setIngredientName] = useState("")
-    const [newRecipeId, setNewRecipeId] = useState()
-    const [recipeIngredients, setRecipeIngredients] = useState()
+    const [ingredient, setIngredient] = useState("")
+    const [selectedIngredient, setSelectedIngredient] = useState("")
+    const [newRecipeId, setNewRecipeId] = useState() 
+    const [recipeIngredient, setRecipeIngredient] = useState({
+        measurement: "",
+        ingredient: {
+            name: ""
+        }
+    })
+    const [options, setOptions] = useState(ingredients)
+
+    function onSelect(selectedList, selectedItem) {
+        console.log("selected")
+    }
+    
+    function onRemove(selectedList, removedItem) {
+        console.log("unselected")
+    }
 
     const [newIngredient, setNewIngredient] = useState('')
     const [likes, setLikes] = useState(0)
 
     const changeHandler = e => {
-        setRecipeIngredients({...recipeIngredients, [e.target.name]: e.target.value})
+        setRecipeIngredient({...recipeIngredient, [e.target.name]: e.target.value})
      }
 
     // const [show, setShow] = useState()
@@ -40,7 +58,12 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
             user_id: currentUser.id,
             likes: 0,
             cooks: {comment: "", stars: 5},
-            newRecipeId
+            newRecipeId,
+            recipeIngredient: {
+                measurement,
+                ingredient: {name: ""},
+                newRecipeId,
+                }
         }
         
             fetch('http://127.0.0.1:3006/recipes/', {
@@ -54,18 +77,14 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
             // addRecipe(recipe)
             console.log(recipe)
         })
-    }
-
-    function handleSubmitIngredient(event) {
-        event.preventDefault()
 
         const RecipeIngredient = {
             newRecipeId,
             measurement,
-            ingredientName
+            ingredient
         }
         
-            fetch('http://localhost:3006/recipe_ingredients', {
+            fetch(`http://localhost:3006/recipe_ingredients/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(RecipeIngredient)
@@ -75,6 +94,7 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
         .then(data => {
             console.log(data)
         })
+
     }
 
     const [newIngredientForm, setNewIngredientForm] = useState(false)
@@ -83,53 +103,87 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
         setNewIngredientForm(!newIngredientForm)
     }
     
+    function handleIngredientSubmit(event) {
+        event.preventDefault()
+
+        const newIngredient = {
+            ingredient
+        }
+        
+            fetch('http://127.0.0.1:3006/ingredients/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newIngredient)
+        })
+
+        .then(response => response.json())
+        .then(data => {
+            handleAddIngredient(data)
+            console.log(data)
+        })
+    }
+
     return (
         <main>
             <Form onSubmit={handleSubmit} className="newrecipe">
                 <h2>Let's see your incredible food creation!</h2>
-                <FormGroup className="mb-3" controlId="RecipeName">
-                    <Form.Label>Recipe Name</Form.Label>
-                    <Form.Control type="text" placeholder="My Recipe's Name" 
+                <Form.Field className="mb-3" controlId="RecipeName">
+                    <label>Recipe Name</label>
+                    <input type="text" placeholder="My Recipe's Name" 
                     value={name} onChange={(e) => setName(e.target.value)}/>
-                </FormGroup>
-                <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label>Amazing Food Picture 📸</Form.Label>
-                    <Form.Control type="text" value={image} onChange={(e) => setImage(e.target.value)}/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="Tell us how you made your amazing recipe...">
-                    <Form.Label>Instructions</Form.Label>
-                    <Form.Control as="textarea" rows={3} placeholder="a bunch of stirring and mixing and loving, ya know!"
+                </Form.Field>
+                <Form.Field controlId="formFile" className="mb-3">
+                    <label>Amazing Food Picture 📸</label>
+                    <input type="text" value={image} onChange={(e) => setImage(e.target.value)}/>
+                </Form.Field>
+                <Form.Field className="mb-3" controlId="Tell us how you made your amazing recipe...">
+                    <label>Instructions</label>
+                    <Form.Field as="textarea" rows={3} placeholder="a bunch of stirring and mixing and loving, ya know!"
                     value={instructions} onChange={(e) => setInstructions(e.target.value)}/>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control type="text" 
+                </Form.Field>
+                <Form.Field>
+                    <label>Time</label>
+                    <input type="text" 
                     value={time} onChange={(e) => setTime(e.target.value)}/>
-                </Form.Group>
+                </Form.Field>
+                <Form.Field>
+                <label>Add your ingredients</label>
+                    <Multiselect type="text" selectedvalues={selectedIngredient} 
+                    onSelect={onSelect} onRemove={onRemove} options={ingredients} 
+                    displayValue="name"
+                    />
+                    <label>Measurement</label>
+                    <input type="text" 
+                    value={measurement} onChange={(e) => setMeasurement(e.target.value)}/>
+                </Form.Field>
+
                 <Button className="save-button" variant="primary" type="submit">
                     Save Recipe
                 </Button>
+                <ul>
+                    <li>{measurement} {ingredient} </li>
+                </ul>
             </Form>
-            <h3>Recipe Ingredients</h3>
+            <h5>Don't see you deloved Ingredient? Add it here! </h5>
             {newIngredientForm && (
-            <Form onSubmit={handleSubmitIngredient} className="new-ingredients">
-                    <Form.Group>
-                        <Form.Label>Recipe Ingredients</Form.Label>
-                        <Form.Control type="text" placeholder="measurement&units"
-                        value={measurement} onChange={(e) => setMeasurement(e.target.value)}/>
-                        <Form.Control type="text" placeholder="ingredient name"
-                        value={ingredientName} onChange={(e) => setIngredientName(e.target.value)}/>
-                    </Form.Group>
+            <Form onSubmit={handleIngredientSubmit} className="new-ingredients">
+                    <Form.Field>
+                        <label>New Ingredient</label>
+                        <input type="text" placeholder="ingredient name"
+                        value={ingredient} onChange={(e) => setIngredient(e.target.value)}/>
+                    </Form.Field>
                     <Button className="save-button" type="submit">
                         Save Ingredient
                     </Button>
             </Form>
             )}
-            <button className="toggle" onClick={handleIngredientToggle}>
+            <Button className="toggle" onClick={handleIngredientToggle}>
                     Add a New Ingredient
-            </button>    
+            </Button>    
             
         </main>
+    )
+            }
         
     //     <form onSubmit={handleSubmit} className="newrecipe">
     //         <label>
@@ -147,8 +201,71 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
     //         <input type="submit" value="Post" />
     //     </form>
     
-       
-    )
-}
+    // import React from 'react';
+    // import { makeStyles } from '@material-ui/core/styles';
+    // import InputLabel from '@material-ui/core/InputLabel';
+    // import MenuItem from '@material-ui/core/MenuItem';
+    // import FormControl from '@material-ui/core/FormControl';
+    // import Select from '@material-ui/core/Select';
+    // import Button from '@material-ui/core/Button';
+    
+    // const useStyles = makeStyles((theme) => ({
+    //   button: {
+    //     display: 'block',
+    //     marginTop: theme.spacing(2),
+    //   },
+    //   formControl: {
+    //     margin: theme.spacing(1),
+    //     minWidth: 120,
+    //   },
+    // }));
+    
+    // export default function ControlledOpenSelect() {
+    //   const classes = useStyles();
+    //   const [age, setAge] = React.useState('');
+    //   const [open, setOpen] = React.useState(false);
+    
+    //   const handleChange = (event) => {
+    //     setAge(event.target.value);
+    //   };
+    
+    //   const handleClose = () => {
+    //     setOpen(false);
+    //   };
+    
+    //   const handleOpen = () => {
+    //     setOpen(true);
+    //   };
+    
+    //   return (
+    //     <div>
+    //       <Button className={classes.button} onClick={handleOpen}>
+    //         Open the select
+    //       </Button>
+    //       <FormControl className={classes.formControl}>
+    //         <InputLabel id="demo-controlled-open-select-label">Age</InputLabel>
+    //         <Select
+    //           labelId="demo-controlled-open-select-label"
+    //           id="demo-controlled-open-select"
+    //           open={open}
+    //           onClose={handleClose}
+    //           onOpen={handleOpen}
+    //           value={age}
+    //           onChange={handleChange}
+    //         >
+    //           <MenuItem value="">
+    //             <em>None</em>
+    //           </MenuItem>
+    //           <MenuItem value={10}>Ten</MenuItem>
+    //           <MenuItem value={20}>Twenty</MenuItem>
+    //           <MenuItem value={30}>Thirty</MenuItem>
+    //         </Select>
+    //       </FormControl>
+    //     </div>
+    //   );
+    // }
+    
+    
+
 
 export default NewPostForm;

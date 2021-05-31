@@ -1,23 +1,31 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
 
 function AllUserPage({users, onClickUserId}) {
 
-    console.log(users)
+    // console.log(users)
     return (
-        <main>
-            <h1>All Users</h1>
-            <ul>
-                {users.map((user) => (
-                    <div>
-                        <Link to={`/users/${user.id}`} >
-                            <li onClick={() => onClickUserId(user.id)}>{user.name}</li>
-                        </Link>  
-                        {/* <button>See More!</button>  */}
-                    </div>
-                ))}
-            </ul>
-        </main>
+        <Grid >
+            <Grid.Row >
+                <Grid.Column>
+                    <ul className="all-user-box">
+                        {users.map((user) => (
+                            <Card>
+                                <Image src={user.image} />
+                                <Link to={`/users/${user.id}`} >
+                                    <Card.Content className="user-card"
+                                    onClick={() => onClickUserId(user.id)}>
+                                        {user.name}
+                                    </Card.Content>
+                                </Link>  
+                            </Card>
+                        ))}
+                    </ul>
+                </Grid.Column>
+            </Grid.Row>
+            
+        </Grid>
     )
 }
 export default AllUserPage;

@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import MyPostContainer from './MyPostContainer';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn } from 'semantic-ui-react'
 // import MyCooksPage from './MyCooksPage';
 // import MyLikesPage from './MyLikesPage';
+
 
 function Home({recipes, setRecipes, currentUser, cooks, 
     setCooks, like, setLike, cooked, setCooked, users, updateCooks, 
     updateLikes, handleUpdateRecipe, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 74)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 81)
     
     // function handleCookRecipe(id) {
     //     const updatedRecipes = recipes.map((recipe) => {
@@ -19,12 +21,31 @@ function Home({recipes, setRecipes, currentUser, cooks,
     // }
 
     return (
-        <div>
+        <div class="home-page">
+            <div className="profile-pic">
+                <Image src="https://pbs.twimg.com/profile_images/1213998484669337601/VxCF6Xjq.jpg" alt="..." 
+                size='small' circular centered/> 
+            </div>
             <div>
-                <img src="https://pbs.twimg.com/profile_images/1213998484669337601/VxCF6Xjq.jpg" alt="..." 
-                width="130" class="rounded mb-2 img-thumbnail" /> 
-                <h4 className="mt-0 mb-0">Susana Vik</h4>
-                <p className="small mb-4"> <i className="fas fa-map-marker-alt mr-2"></i>✏️Welcome2SuCasa</p>
+                <Label className="user-name">
+                    <Icon name='user outline' /> Susana Vik
+                </Label>
+                <Label className="user-name">
+                     ✏️ Welcome2SuCasa
+                </Label>
+                <nav className="profile-nav-bar" attached="top">
+                <Button.Group className='header-btn'>
+                    <Link to='/home'>
+                       <Button basic color='pink' inverted>My Recipes</Button>
+                    </Link>
+                    <Link to='/mylikes'>
+                       <Button basic color='pink' inverted>My Likes</Button>
+                    </Link>
+                    <Link to='/mycooks'>
+                        <Button basic color='pink' inverted>My Cooks</Button>
+                    </Link>
+                </Button.Group>
+                </nav>
                 <ul>
                     {filteredRecipes.map((recipeObj) => (
                         <MyPostContainer recipeObj={recipeObj} key={recipeObj.id} 
@@ -37,14 +58,6 @@ function Home({recipes, setRecipes, currentUser, cooks,
                     ))}
                 </ul>
             </div>
-            <nav>
-                <Link to='/mylikes'>
-                    <h3>My Likes</h3>
-                </Link>
-                <Link to='/mycooks'>
-                    <h3>My Cooks</h3>
-                </Link>
-            </nav>
         </div>
             
   

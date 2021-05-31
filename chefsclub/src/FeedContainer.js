@@ -1,5 +1,6 @@
 import React from 'react';
 import FeedPostItem from './FeedPostItem';
+import {  Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
 
 function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setLike, 
     cooked, setCooked, updateCooks, onClickRecipe, currentUser, user}) {
@@ -12,8 +13,8 @@ function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setL
 
     return (
         <main>
-            <h1>Food Feed</h1>
-            <ul>
+            <h1 className="title">Food Feed</h1>
+            <ul className="recipe-feed-container">
                 {recipes.map((recipe) => (
                     <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
                     cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 

@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form, FormField } from 'semantic-ui-react'
 
 function UpdateRecipeForm({currentUser, recipe, handleUpdateRecipe}) {
 
-    const [name, setName] = useState("")
-    const [image, setImage] = useState("")
-    const [time, setTime] = useState("")
-    const [instructions, setInstructions] = useState("")
-    const [ingredients, setIngredients] = useState({})
+    const [name, setName] = useState(recipe.name)
+    const [image, setImage] = useState()
+    const [time, setTime] = useState(recipe.time)
+    const [instructions, setInstructions] = useState(recipe.instructions)
+    const [ingredients, setIngredients] = useState([])
 
     // function handleInputChange(event) {
     //     onChangeForm(event.target.name, event.target.value)
@@ -41,21 +42,33 @@ function UpdateRecipeForm({currentUser, recipe, handleUpdateRecipe}) {
     }
 
     return (
-        <form onSubmit={handleRecipeUpdate} className="newrecipe">
+        <Form onSubmit={handleRecipeUpdate} className="newrecipe">
+            <Form.Field>
                 <label>
                     Recipe Name
                     <input type="text" name="name" onChange={(e) => setName(e.target.value)} value={name} />
                 </label>
+            </Form.Field>
+            <Form.Field>
+                <label>
+                    Time
+                    <input type="text" name="name" onChange={(e) => setTime(e.target.value)} value={time} />
+                </label>
+            </Form.Field>
+            <FormField>
                 <label>
                     Amazing Food Pics 📸
                     <input type="file" name="name" onChange={(e) => setImage(e.target.value)} value={image}/>
                 </label>
+            </FormField>
+            <Form.Field>
                 <label>
                     Instructions
                     <textarea type="text" instructions="instructions" onChange={(e) => setInstructions(e.target.value)} value={instructions}/>
                 </label>
-                <input type="submit" value="Post" />
-        </form>
+            </Form.Field>
+            <Button type="submit">Post</Button> 
+        </Form>
     )
 }
 

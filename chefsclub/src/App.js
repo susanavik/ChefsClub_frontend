@@ -1,5 +1,6 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
+import { Segment } from 'semantic-ui-react';
 import Home from './Home';
 import Login from './Login';
 import FeedContainer from './FeedContainer';
@@ -24,6 +25,7 @@ function App() {
   const [selectedRecipeId, setSelectedRecipeId] = useState(null)
   const [recipeIngredients ,setRecipeIngredients] = useState([])
   const [selectedUserId, setSelectedUserId] = useState(null)
+  const [ingredients, setIngredients] = useState([])
 
   useEffect(() => {
     fetch("http://localhost:3006/recipes")
@@ -32,7 +34,13 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/74")
+    fetch("http://localhost:3006/ingredients")
+        .then(res => res.json())
+        .then(setIngredients)
+  }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:3006/users/81")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -62,9 +70,13 @@ function App() {
     setRecipes([...recipes, newRecipe])
   }
 
+  function handleAddIngredient(newIngredient) {
+    setIngredients([...ingredients, newIngredient])
+  }
+
   function addRecipeIngredients(newRecipeIngredient) {
-    // setRecipeIngredients([...recipeIngredients, newRecipeIngredient])
-    console.log(newRecipeIngredient)
+    setRecipeIngredients([...recipeIngredients, newRecipeIngredient])
+    
   }
 
   function handleCooked(newCooksObj) {
@@ -134,7 +146,7 @@ function App() {
     }
 
   const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 74)
+    const currUser = users.filter((user) => user.id === 81)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
@@ -144,39 +156,44 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Welcome to Chef's Club👩‍🍳</h1>
+      <h1 className="app-title" attached='top'>Welcome to Chef's Club👩‍🍳</h1>
       <BrowserRouter>
         <Switch>
           <Route exact path='/login' >
             <Login />
           </Route>
           <Route exact path='/myfeed'>
+            <Header />
             <FeedContainer recipes={recipes} onUpdateRecipe={handleUpdateRecipe} currentUser={currentUser}
             cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} 
             onClickRecipe={setSelectedRecipeId} onClickUserId={setSelectedUserId}
             user={selectedUser}/>
-            <Header />
+            
           </Route>
           <Route exact path='/myfeed/:id'>
+              <Header />
               <PostItem recipes={recipes}
                 recipe={selectedRecipe} 
                 currentUser={currentUser} user={selectedUser}
               />
           </Route>
           <Route exact path='/home'>
+            <Header />
             <Home recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
             handleUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} users={users} updateCooks={updateCooks} onRemoveRecipe={onRemoveRecipe}
             filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes} 
             onClickUserId={setSelectedUserId} onClickRecipe={setSelectedRecipeId} 
             />
-            <Header />
+            
           </Route>
           <Route exact path='/users/'>
-            <AllUserPage recipes={recipes} users={users} onClickUserId={setSelectedUserId}/>
             <Header />
+            <AllUserPage recipes={recipes} users={users} onClickUserId={setSelectedUserId}/>
+            
           </Route>
           <Route exact path='/users/:id'>
+            <Header />
             <UserShowPage recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
             handleUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} onRemoveRecipe={onRemoveRecipe}
@@ -184,12 +201,14 @@ function App() {
             onClickUserId={setSelectedUserId} onClickRecipe={setSelectedRecipeId} users={users}
             user={selectedUser}
             />
-            <Header />
+            
           </Route>
           <Route exact path='/newpost'>
+            <Header />
               <NewPostForm currentUser={currentUser} addRecipe={handleAddRecipe} 
-              onUpdateCook={handleCooked} addRecipeIngredients={addRecipeIngredients}/>
-              <Header />
+              onUpdateCook={handleCooked} addRecipeIngredients={addRecipeIngredients}
+              ingredients={ingredients} handleAddIngredient={handleAddIngredient} />
+              
           </Route>
           <Route exact path='/mylikes'>
               <MyLikesPage recipes={likedRecipes} currentUser={currentUser}
