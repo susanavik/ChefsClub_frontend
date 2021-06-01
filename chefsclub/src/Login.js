@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Redirect, Route, Link} from 'react-router-dom';
 // import MyProfile from './Home'
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form } from 'semantic-ui-react'
+
 
 
 function Login({recipes}) {
@@ -68,17 +70,27 @@ function Login({recipes}) {
         <div className="logincontainer">
             <iframe src="https://giphy.com/embed/WxMBQU7IS82Q0" 
             width="400" height="240" framBorder="0" className='giphy' allowFullScreen></iframe>
-            <h3>Please Log in</h3>
-            <form onSubmit={HandleLogin}>
-                <label>
-                    <p>Username</p>
-                </label>
-                <input type="text" placeholder="my username" onChange={handleChange} />
-                <Link to='/home'>
-                    <button type="submit">Login</button>
-                </Link>
-            </form>
+            <h3>Log in here</h3>
+            <Form onSubmit={HandleLogin} size='small'>
+            <Form.Field>
+              <label>Enter Username</label>
+              <input type='username' />
+            </Form.Field>
+            <Form.Field>
+              <label>Enter Password</label>
+              <input type='password' />
+            </Form.Field>
+            <Link to='/home'>
+                <Button type="submit">Let's get cookin</Button>
+            </Link>
+                
+            </Form>
         </div>
+        // <input type="text" placeholder="my username" onChange={handleChange} />
+        // <label>
+        //     <p>Password</p>
+        // </label>
+        // <input type="text" placeholder="my password" onChange={handleChange} />
 
     )
 }

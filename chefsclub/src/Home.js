@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import MyPostContainer from './MyPostContainer';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
-import { Button, Segment, Image, Icon, Label, Grid, GridColumn } from 'semantic-ui-react'
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card } from 'semantic-ui-react'
 // import MyCooksPage from './MyCooksPage';
 // import MyLikesPage from './MyLikesPage';
 
@@ -11,7 +11,7 @@ function Home({recipes, setRecipes, currentUser, cooks,
     updateLikes, handleUpdateRecipe, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 81)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 88)
     
     // function handleCookRecipe(id) {
     //     const updatedRecipes = recipes.map((recipe) => {

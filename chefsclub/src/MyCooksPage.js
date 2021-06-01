@@ -1,81 +1,70 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import MyCooksCard from './MyCooksCard'
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form, CardGroup, Feed, CardContent} from 'semantic-ui-react'
 
-function MyCooksPage({currentUser}) {
+function MyCooksPage({currentUser, onClickRecipeId}) {
 
     // let cookIitem = currentUser.cooks.map((cook) => cook.recipe_id)
-
    
     const [cookedRecipes, setCookedRecipes] = useState([])
     const [myCooks, setMyCooks] = useState([])
 
+    const [showComment, setShowComment] = useState(false)
+
+    function handleShowComment() {
+        setShowComment(!showComment)
+    }
+
     return (
-        <div>
+    <main>
+        <nav className="profile-nav-bar" attached="top">
+            <Button.Group className='header-btn'>
+                <Link to='/home'>
+                    <Button basic color='pink' inverted>My Recipes</Button>
+                </Link>
+                <Link to='/mylikes'>
+                    <Button basic color='pink' inverted>My Likes</Button>
+                </Link>
+                <Link to='/mycooks'>
+                    <Button basic color='pink' inverted>My Cooks</Button>
+                </Link>
+            </Button.Group>
+        </nav>
+        <Grid>
+           <Grid.Row >
             {currentUser.cooks.map((cook) => (
-                <div>
-                    <img src={cook.recipe.image} alt={cook.recipe.name} width="400" height="240" frameBorder="0" 
-                     className='post-image'/>
-                   <h3>{cook.recipe.name}</h3> 
-                    <p>{cook.comment}</p>   
-                </div>
-            ))
-            // <img src={cook.image} alt={cook.name} width="400" height="240" frameBorder="0" 
-            //         className='post-image'/>
-            //     <h1>{recipeObj.name}</h1>
-            //     <p>{cooksCount}🍪</p>
-            //     <p>{likesCount}💗</p>
-            //     { like ? (
-            //     <button onClick={handleLikeClick}
-            //     className="like-button">
-            //         💗
-            //     </button>
-            //     ) : (
-            //     <button onClick={handleLikeClick}
-            //     className="like-button-active">
-            //         🤍
-            //     </button>
-            //     )
-            //     }
-            //     { cooked ? (
-            //         <div>
-            //             <button onClick={handleCookedClick}
-            //             className="cooked-button">
-            //             🍪
-            //             </button>
-            //         </div>
-            //     ) : (
-            //         <button onClick={handleCookedClick}
-            //         className="cooked-button-active">
-            //             ⚪
-            //         </button>
-            //     )
-            //     }   
-            // </li>
-            // <button onClick={handleDeleteClick} className="emoji-button delete">
-            //     🗑
-            // </button>
-            // <div>
-            //     {commentForm && (
-            //         <form onSubmit={handleSubmitComment} className="new-comment">
-            //         <label>
-            //             Cooked? Now share what you thought!
-            //             <input type="text" name="comment" 
-            //             onChange={(e) => setComment(e.target.value)} value={comment} />
-            //         </label>
-            //         <label>
-            //             Star Rating: 1 - 5
-            //             <input type="number" name="rating" 
-            //             onChange={(e) => setStars(e.target.value)} value={stars} />
-            //         </label>
-            //         <input type="submit" value="Post" />
-            //     </form>
-            //     )}
-            //     <button onClick={handleCommentToggle}>
-            //         Post Comment
-            //     </button>
-            // </div>
-        }
-        </div> 
+                <Grid.Column width={8}> 
+                <Card>
+                    <Image src={cook.recipe.image} alt={cook.recipe.name} width="400" height="240" frameBorder="0" 
+                     className='post-image' size='medium' rounded/>
+                     <Link to={`/recipes/${cook.recipe.id}`}>
+                        <Card.Header as='h2' key={cook.recipe.id} onClick={() => onClickRecipeId(cook.recipe.id)}>
+                            {cook.recipe.name}
+                        </Card.Header> 
+                     </Link>
+                    <Card.Content>
+                        <Card.Meta>   
+                        {showComment && (
+                            <ul className="comment-ul">{cook.stars}🌟{cook.comment} </ul>
+                        )}
+                        <Button className="show-toggle" onClick={handleShowComment} 
+                        basic color='red' circular size="mini">
+                                See Comments
+                        </Button>
+                        </Card.Meta>
+                    </Card.Content>
+                    {/* <Button onClick={handleShowComment} basic color='red' size="mini">
+                        Show Comment
+                    </Button> */}
+                </Card>
+                </Grid.Column> 
+
+            ))}
+            </Grid.Row >
+        </Grid> 
+
+    </main>
     )
 }
 

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {  Link } from 'react-router-dom';
+import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form, CardContent } from 'semantic-ui-react'
 
 function UserPostContainer({recipeObj, updateLikes, updateCooks,
 handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, currentUser }) {
@@ -97,66 +98,141 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
     }
 
        return (
-        <div>
-            <li>
-                <img src={recipeObj.image} alt={recipeObj.name} width="400" height="240" 
-                frameBorder="0" className='post-image'/>
-                <h1>{recipeObj.name}</h1>
-                <p>{cooksCount}🍪</p>
-                <p>{likesCount}💗</p>
-                { like ? (
-                <button onClick={handleLikeClick}
-                className="like-button">
-                    💗
-                </button>
+        
+        // <div>
+        //     <li>
+        //         <img src={recipeObj.image} alt={recipeObj.name} width="400" height="240" 
+        //         frameBorder="0" className='post-image'/>
+        //         <h1>{recipeObj.name}</h1>
+        //         <p>{cooksCount}🍪</p>
+        //         <p>{likesCount}💗</p>
+        //         { like ? (
+        //         <button onClick={handleLikeClick}
+        //         className="like-button">
+        //             💗
+        //         </button>
+        //         ) : (
+        //         <button onClick={handleLikeClick}
+        //         className="like-button-active">
+        //             🤍
+        //         </button>
+        //         )
+        //         }
+        //         { cooked ? (
+        //             <div>
+        //                 <button onClick={handleCookedClick}
+        //                 className="cooked-button">
+        //                 🍪
+        //                 </button>
+        //             </div>
+        //         ) : (
+        //             <button onClick={handleCookedClick}
+        //             className="cooked-button-active">
+        //                 ⚪
+        //             </button>
+        //         )
+        //         }   
+        //     </li>
+        //     <div>
+        //         {commentForm && (
+        //             <form onSubmit={handleSubmitComment} className="new-comment">
+        //             <label>
+        //                 Cooked? Now share what you thought!
+        //                 <input type="text" name="comment" 
+        //                 onChange={(e) => setComment(e.target.value)} value={comment} />
+        //             </label>
+        //             <label>
+        //                 Star Rating: 1 - 5
+        //                 <input type="number" name="rating" 
+        //                 onChange={(e) => setStars(e.target.value)} value={stars} />
+        //             </label>
+        //             <input type="submit" value="Post" />
+        //         </form>
+        //         )}
+        //         <button onClick={handleCommentToggle}>
+        //             Post Comment
+        //         </button>
+        //     </div>
+        //         <Link to={`/recipes/${recipeObj.id}`}>
+        //             <button key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
+        //                 Show Post Details
+        //             </button>
+        //         </Link>
+        // </div>
+        <Card>
+        <Image src={recipeObj.image} wrapped ui={false} 
+        fluid label={{ as: 'a', corner: 'left', icon: 'heart' }}
+        />
+        <Card.Content>
+            <Card.Header>{recipeObj.name}</Card.Header>
+            < Card.Description>
+                <Link to={`/recipes/${recipeObj.id}`}>
+                    <Button size='mini' basic color='red' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
+                        Show Post Details
+                    </Button>
+                </Link>
+            </Card.Description>
+         </Card.Content>
+        <Card.Content extra>
+        <Card.Description>
+            { cooked ? (
+                <Button onClick={handleCookedClick}
+                className="cooked-button" content='Cooked' basic color='red'
+                label={{ as: 'a', basic: true, content: '2🍪' }} size="mini" circular>
+                cooked!
+                 </Button>
                 ) : (
-                <button onClick={handleLikeClick}
-                className="like-button-active">
-                    🤍
-                </button>
+                    <Button onClick={handleCookedClick}  basic color='red'
+                    className="cooked-button-active" size="mini" circular>
+                    cooked? 
+                    </Button>
                 )
                 }
-                { cooked ? (
-                    <div>
-                        <button onClick={handleCookedClick}
-                        className="cooked-button">
-                        🍪
-                        </button>
-                    </div>
-                ) : (
-                    <button onClick={handleCookedClick}
-                    className="cooked-button-active">
-                        ⚪
-                    </button>
-                )
-                }   
-            </li>
-            <div>
-                {commentForm && (
-                    <form onSubmit={handleSubmitComment} className="new-comment">
-                    <label>
+            { like ? (
+                    <Button onClick={handleLikeClick} basic color='red'
+                    className="like-button" label={{ as: 'a', basic: true, content: '27💗' }}
+                     size="mini" circular>
+                    likes
+                    </Button>
+                    ) : (
+                    <Button onClick={handleLikeClick} basic color='red'
+                    className="like-button-active" size="mini" circular> 
+                      🤍
+                    </Button>
+                    )
+                    }   
+            </Card.Description>
+           
+        </Card.Content>
+        <CardContent>
+        <div>
+            {commentForm && (
+                <Form onSubmit={handleSubmitComment} className="new-comment">
+                    <Form.Field>
+                        <label>
                         Cooked? Now share what you thought!
+                        </label>
                         <input type="text" name="comment" 
                         onChange={(e) => setComment(e.target.value)} value={comment} />
-                    </label>
-                    <label>
+                    </Form.Field>
+                    <Form.Field>
+                        <label>
                         Star Rating: 1 - 5
+                        </label>
                         <input type="number" name="rating" 
                         onChange={(e) => setStars(e.target.value)} value={stars} />
-                    </label>
-                    <input type="submit" value="Post" />
-                </form>
-                )}
-                <button onClick={handleCommentToggle}>
-                    Post Comment
-                </button>
-            </div>
-                <Link to={`/recipes/${recipeObj.id}`}>
-                    <button key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
-                        Show Post Details
-                    </button>
-                </Link>
+                    </Form.Field>
+                   <Button type="submit">Post</Button>
+                    {/* <input type="submit" value="Post" /> */}
+            </Form>
+            )}
+            <Button onClick={handleCommentToggle} basic color='red' size="mini">
+                Post Comment
+            </Button>
         </div>
+            
+        </CardContent>
+    </Card>
        )
 }
 

@@ -12,17 +12,29 @@ function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setL
     // })
 
     return (
-        <main>
-            <h1 className="title">Food Feed</h1>
-            <ul className="recipe-feed-container">
+        // <main>
+        //     <h1 className="title">Food Feed</h1>
+        //     <ul className="recipe-feed-container">
+        //         {recipes.map((recipe) => (
+        //             <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
+        //             cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
+        //             cooked={cooked} setCooked={setCooked} onClickRecipe={onClickRecipe} 
+        //             currentUser={currentUser} user={user}/>
+        //         ))}
+        //     </ul>
+        // </main>
+
+    <Grid>
+        <Grid.Row column={3}>
                 {recipes.map((recipe) => (
-                    <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
-                    cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
-                    cooked={cooked} setCooked={setCooked} onClickRecipe={onClickRecipe} 
-                    currentUser={currentUser} user={user}/>
-                ))}
-            </ul>
-        </main>
+                        <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
+                        cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
+                        cooked={cooked} setCooked={setCooked} onClickRecipe={onClickRecipe} 
+                        currentUser={currentUser} user={user}/>
+                    ))}
+        
+        </Grid.Row>
+    </Grid>
     )
 }
 export default FeedContainer;

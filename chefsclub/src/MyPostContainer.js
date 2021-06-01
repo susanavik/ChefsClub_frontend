@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {  Link } from 'react-router-dom';
 import UpdateRecipeForm from './UpdateRecipeForm';
-import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
+import { Button, Comment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
 // import PostItem from './PostItem'
 
 function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, setCooks, 
@@ -50,6 +50,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
 
     function HandleUpdateToggle() {
         setEditForm(!editForm)
+        
     }
 
     const [commentForm, setCommentForm] = useState(false)
@@ -156,21 +157,35 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
     // console.log(ingredient)
     // const cookComments = cookObj.comments((comment) => comment)
 
+    const commentObj = cooks.map((cook) => {
+        
+        return <Comment.Content>
+            <Comment.Author as='a' color='red'>
+                <Label color='red'>{cook.user.name}</Label>
+            </Comment.Author>
+            <Comment.Text>I give this recipe {cook.stars || 0} 🌟! {cook.comment}</Comment.Text>
+        </Comment.Content>
+    })
+
+    // console.log(recipe.cooks)
+    // console.log(commentObj)
+
+    const [comments, setComments] = useState(false)
+
+    function handleShowComment() {
+        setComments(!comments)
+    }
+
     return (
     <div>
         <Card>
             <Image src={recipeObj.image} wrapped ui={false} 
             fluid label={{ as: 'a', corner: 'left', icon: 'heart' }}
-            />
+            size='medium' rounded/>
             <Card.Content>
-                <Card.Header>{recipeObj.name}</Card.Header>
-                < Card.Description>
-                    <Link to={`/recipes/${recipeObj.id}`}>
-                        <Button size='mini' basic color='red' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
-                            Show Post Details
-                        </Button>
-                    </Link>
-                </Card.Description>
+               <Link to={`/recipes/${recipeObj.id}`}>
+                    <Card.Header as='h2' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>{recipeObj.name}</Card.Header>
+               </Link> 
              </Card.Content>
             <Card.Content extra>
             <Card.Description>
@@ -189,7 +204,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                     }
                 { like ? (
                         <Button onClick={handleLikeClick} basic color='red'
-                        className="like-button" label={{ as: 'a', basic: true, content: '27💗' }}
+                        className="like-button" label={{ as: 'a', basic: true, content: '27💗'}}
                          size="mini" circular>
                         likes
                         </Button>
@@ -206,7 +221,20 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                     🗑
                 </Button>
             </Card.Content>
+            
             <CardContent>
+            <Card.Meta>   
+                    {comments && (
+                        <Comment.Content>
+                        {commentObj}
+                        
+                    </Comment.Content>
+                    )}
+                    <Button className="show-toggle" onClick={handleShowComment} 
+                    basic color='red' circular size="mini">
+                            See Comments
+                    </Button>
+            </Card.Meta>
             <div>
                 {commentForm && (
                     <Form onSubmit={handleSubmitComment} className="new-comment">
@@ -228,14 +256,14 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                         {/* <input type="submit" value="Post" /> */}
                 </Form>
                 )}
-                <Button onClick={handleCommentToggle} basic color='red' size="mini">
+                <Button onClick={handleCommentToggle} basic color='red' size="mini" circular>
                     Post Comment
                 </Button>
             </div>
             {editForm && (
                 <UpdateRecipeForm currentUser={currentUser} recipe={recipeObj} handleUpdateRecipe={handleUpdateRecipe} />
                 )}
-                <Button onClick={HandleUpdateToggle} basic color='red' size='mini'>
+                <Button onClick={HandleUpdateToggle} basic color='red' size='mini' circular>
                     Update Recipe
                 </Button>
                 

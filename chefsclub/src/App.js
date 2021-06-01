@@ -26,6 +26,8 @@ function App() {
   const [recipeIngredients ,setRecipeIngredients] = useState([])
   const [selectedUserId, setSelectedUserId] = useState(null)
   const [ingredients, setIngredients] = useState([])
+  const [likedRecipe, setLikedRecipe] = useState([])
+  const [likedRecipes, setLikedRecipes] = useState([])
 
   useEffect(() => {
     fetch("http://localhost:3006/recipes")
@@ -40,7 +42,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/81")
+    fetch("http://localhost:3006/users/88")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -109,10 +111,9 @@ function App() {
     setRecipes(newRecipes)
   }
 
-  const [likedRecipes, setLikedRecipes] = useState([])
 
   function updateLikes(likeObject) {
-      setLikedRecipes(likeObject)
+      setLikedRecipe(likeObject)
       console.log(likeObject)
   }
 
@@ -134,6 +135,7 @@ function App() {
     }
 
     function filterLikedRecipes(likedObj) {
+      console.log(likedObj)
       let newRecipes = recipes.map((recipe) => {
         if (recipe.id === likedObj.recipe_id) {
           let newLikes = [...recipe.likes, likedObj]
@@ -142,11 +144,12 @@ function App() {
         } else {
           return recipe
         }
+        setLikedRecipes(newRecipes)
       })
     }
 
   const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 81)
+    const currUser = users.filter((user) => user.id === 88)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
@@ -168,7 +171,6 @@ function App() {
             cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} 
             onClickRecipe={setSelectedRecipeId} onClickUserId={setSelectedUserId}
             user={selectedUser}/>
-            
           </Route>
           <Route exact path='/myfeed/:id'>
               <Header />
@@ -211,13 +213,13 @@ function App() {
               
           </Route>
           <Route exact path='/mylikes'>
-              <MyLikesPage recipes={likedRecipes} currentUser={currentUser}
-              onClickId={setSelectedUserId}/>
+              <MyLikesPage recipes={likedRecipe} currentUser={currentUser}
+              onClickRecipeId={setSelectedUserId} />
           </Route>
           <Route exact path='/mycooks'>
               <MyCooksPage 
               recipes={cookedRecipes} currentUser={currentUser} 
-              onClickUserId={setSelectedUserId}/>
+              onClickUserId={setSelectedUserId} onClickRecipeId={setSelectedUserId}/>
           </Route>
             <Route exact path='/recipes/:id'>
                 <PostItem recipes={recipes}
