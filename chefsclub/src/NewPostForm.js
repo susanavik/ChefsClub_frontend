@@ -4,12 +4,15 @@ import Modal from 'react-modal'
 // import { MultiSelect } from '@material-ui/core';
 import { Multiselect } from 'multiselect-react-dropdown';
 import FormCheck from 'react-bootstrap/FormCheck'
-import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form, FormField } from 'semantic-ui-react'
+import { Button, Dropdown, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form, FormField } from 'semantic-ui-react'
 
 function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook, 
     ingredients, handleAddIngredient}) {
 
-    console.log(ingredients)
+    // console.log(ingredients)
+    
+
+    // console.log(ingredientObj)
 
     const [name, setName] = useState("")
     const [image, setImage] = useState("https://media.istockphoto.com/photos/assortment-of-fine-chocolate-candies-white-dark-and-milk-chocolate-picture-id1148258027?k=6&m=1148258027&s=612x612&w=0&h=NEiHmrApK8fRuf9ffg_XiJUXozlyi3QgLDgPJlGLuGE=")
@@ -17,30 +20,24 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
     const [instructions, setInstructions] = useState("")
     const [measurement, setMeasurement] = useState("")
     const [ingredient, setIngredient] = useState("")
-    const [selectedIngredient, setSelectedIngredient] = useState("")
+    // const [newIngredient, setNewIngredient] = useState({})
     const [newRecipeId, setNewRecipeId] = useState() 
-    const [recipeIngredient, setRecipeIngredient] = useState({
-        measurement: "",
-        ingredient: {
-            name: ""
-        }
-    })
-    const [options, setOptions] = useState(ingredients)
 
-    function onSelect(selectedList, selectedItem) {
-        console.log("selected")
+    const [recipeIngredients, setRecipeIngredients] = useState([])
+
+    function addNewIngredient() {
+        // setRecipeIngredients[...recipeIngredients]
     }
-    
-    function onRemove(selectedList, removedItem) {
-        console.log("unselected")
-    }
+
+    // const ingredientObj = ingredients.map(ingredient, {key: ingredient.id, text: ingredient.name})
+
 
     const [newIngredient, setNewIngredient] = useState('')
     const [likes, setLikes] = useState(0)
 
-    const changeHandler = e => {
-        setRecipeIngredient({...recipeIngredient, [e.target.name]: e.target.value})
-     }
+    // const changeHandler = e => {
+    //     setRecipeIngredient({...recipeIngredient, [e.target.name]: e.target.value})
+    //  }
 
     // const [show, setShow] = useState()
 
@@ -59,11 +56,7 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
             likes: 0,
             cooks: {comment: "", stars: 5},
             newRecipeId,
-            recipeIngredient: {
-                measurement,
-                ingredient: {name: ""},
-                newRecipeId,
-                }
+            recipeIngredients
         }
         
             fetch('http://127.0.0.1:3006/recipes/', {
@@ -78,50 +71,50 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
             console.log(recipe)
         })
 
-        const RecipeIngredient = {
-            newRecipeId,
-            measurement,
-            ingredient
-        }
+        // const RecipeIngredient = {
+        //     newRecipeId,
+        //     measurement,
+        //     ingredient
+        // }
         
-            fetch(`http://localhost:3006/recipe_ingredients/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(RecipeIngredient)
-        })
+        //     fetch(`http://localhost:3006/recipe_ingredients/`, {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(RecipeIngredient)
+        // })
 
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-        })
+        // .then(response => response.json())
+        // .then(data => {
+        //     console.log(data)
+        // })
 
     }
 
-    const [newIngredientForm, setNewIngredientForm] = useState(false)
+    // const [newIngredientForm, setNewIngredientForm] = useState(false)
 
-    function handleIngredientToggle() {
-        setNewIngredientForm(!newIngredientForm)
-    }
+    // function handleIngredientToggle() {
+    //     setNewIngredientForm(!newIngredientForm)
+    // }
     
-    function handleIngredientSubmit(event) {
-        event.preventDefault()
+    // function handleIngredientSubmit(event) {
+    //     event.preventDefault()
 
-        const newIngredient = {
-            ingredient
-        }
+    //     const newIngredient = {
+    //         ingredient
+    //     }
         
-            fetch('http://127.0.0.1:3006/ingredients/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newIngredient)
-        })
+    //         fetch('http://127.0.0.1:3006/ingredients/', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(newIngredient)
+    //     })
 
-        .then(response => response.json())
-        .then(data => {
-            handleAddIngredient(data)
-            console.log(data)
-        })
-    }
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         handleAddIngredient(data)
+    //         console.log(data)
+    //     })
+    // }
 
     return (
         <main>
@@ -142,44 +135,50 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
                     value={instructions} onChange={(e) => setInstructions(e.target.value)}/>
                 </Form.Field>
                 <Form.Field>
-                    <label>Time</label>
+                    <label>Time ⏲️</label>
                     <input type="text" 
                     value={time} onChange={(e) => setTime(e.target.value)}/>
                 </Form.Field>
-                <Form.Field>
-                <label>Add your ingredients</label>
-                    <Multiselect type="text" selectedvalues={selectedIngredient} 
-                    onSelect={onSelect} onRemove={onRemove} options={ingredients} 
-                    displayValue="name"
-                    />
-                    <label>Measurement</label>
-                    <input type="text" 
-                    value={measurement} onChange={(e) => setMeasurement(e.target.value)}/>
-                </Form.Field>
-
-                <Button className="save-button" variant="primary" type="submit">
+                <Form.TextArea label='Magic Ingredients🎟️' placeholder='Add your ingredients...' 
+                value={recipeIngredients} onChange={(e) => setRecipeIngredients(e.target.value)}/>
+                <Button className="save-button" variant="primary" type="submit" color='pink'>
                     Save Recipe
                 </Button>
-                <ul>
+                {/* <ul>
                     <li>{measurement} {ingredient} </li>
-                </ul>
+                </ul> */}
             </Form>
-            <h5>Don't see you deloved Ingredient? Add it here! </h5>
-            {newIngredientForm && (
+            {/* <h5>Don't see you deloved Ingredient? Add it here! </h5> */}
+            {/* {newIngredientForm && (
             <Form onSubmit={handleIngredientSubmit} className="new-ingredients">
                     <Form.Field>
                         <label>New Ingredient</label>
                         <input type="text" placeholder="ingredient name"
                         value={ingredient} onChange={(e) => setIngredient(e.target.value)}/>
-                    </Form.Field>
-                    <Button className="save-button" type="submit">
+                    </Form.Field> */}
+                        
+                        {/* <Dropdown
+                            placeholder='Select an ingredient'
+                            fluid
+                            selection
+                            options={ingredients} displayValue='name'
+                        /> */}
+                            {/* <Multiselect type="text" selectedvalues={ingredient} 
+                            onSelect={onSelect} onRemove={onRemove} options={ingredients} 
+                            displayValue="name"
+                            /> */}
+                            {/* <label>Measurement</label>
+                            <input type="text" 
+                            value={measurement} onChange={(e) => setMeasurement(e.target.value)}/> */}
+                    
+                    {/* <Button className="save-button" type="submit">
                         Save Ingredient
                     </Button>
             </Form>
             )}
             <Button className="toggle" onClick={handleIngredientToggle}>
                     Add a New Ingredient
-            </Button>    
+            </Button>     */}
             
         </main>
     )

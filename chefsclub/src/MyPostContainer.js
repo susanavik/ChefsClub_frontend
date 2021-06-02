@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {  Link } from 'react-router-dom';
 import UpdateRecipeForm from './UpdateRecipeForm';
-import { Button, Comment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
+import { Button, Comment, Image, Rating, Label, Grid, GridColumn, Card, CardContent, Form } from 'semantic-ui-react'
 // import PostItem from './PostItem'
 
 function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, setCooks, 
@@ -177,18 +177,13 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
     }
 
     return (
-    <div>
-        <Card>
+    <Grid.Column width={6} className="recipe-post-container">
+        <Card className="recipe-card">
             <Image src={recipeObj.image} wrapped ui={false} 
-            fluid label={{ as: 'a', corner: 'left', icon: 'heart' }}
+            fluid label={{ as: 'a', corner: 'left', 
+            icon: 'trash alternate outline'}} onClick={handleDeleteClick}
             size='medium' rounded/>
-            <Card.Content>
-               <Link to={`/recipes/${recipeObj.id}`}>
-                    <Card.Header as='h2' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>{recipeObj.name}</Card.Header>
-               </Link> 
-             </Card.Content>
-            <Card.Content extra>
-            <Card.Description>
+             <Button.Group floated='right' size='mini'>
                 { cooked ? (
                     <Button onClick={handleCookedClick}
                     className="cooked-button" content='Cooked' basic color='red'
@@ -203,7 +198,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                     )
                     }
                 { like ? (
-                        <Button onClick={handleLikeClick} basic color='red'
+                        <Button onClick={handleLikeClick} content='Liked' basic color='red'
                         className="like-button" label={{ as: 'a', basic: true, content: '27💗'}}
                          size="mini" circular>
                         likes
@@ -215,27 +210,27 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                         </Button>
                         )
                         }   
-                </Card.Description>
+                </Button.Group>
+            <Card.Content>
+               <Link to={`/recipes/${recipeObj.id}`}>
+                    <Card.Header as='h2' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>{recipeObj.name}</Card.Header>
+               </Link> 
                 <Button onClick={handleDeleteClick} basic color='red' 
                 className="emoji-button delete" size="mini" circular>
                     🗑
                 </Button>
             </Card.Content>
-            
             <CardContent>
-            <Card.Meta>   
+              
                     {comments && (
                         <Comment.Content>
                         {commentObj}
-                        
                     </Comment.Content>
                     )}
                     <Button className="show-toggle" onClick={handleShowComment} 
-                    basic color='red' circular size="mini">
+                    basic color='red' circular size="mini" attached='left'>
                             See Comments
                     </Button>
-            </Card.Meta>
-            <div>
                 {commentForm && (
                     <Form onSubmit={handleSubmitComment} className="new-comment">
                         <Form.Field>
@@ -246,20 +241,18 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                             onChange={(e) => setComment(e.target.value)} value={comment} />
                         </Form.Field>
                         <Form.Field>
-                            <label>
-                            Star Rating: 1 - 5
-                            </label>
-                            <input type="number" name="rating" 
-                            onChange={(e) => setStars(e.target.value)} value={stars} />
+                            <Rating icon='star' defaultRating={3} maxRating={5} 
+                            onChange={(e) => setStars(e.target.value)} value={stars}/>
+                            {/* <input type="number" name="rating" 
+                            onChange={(e) => setStars(e.target.value)} value={stars} /> */}
                         </Form.Field>
                        <Button type="submit">Post</Button>
                         {/* <input type="submit" value="Post" /> */}
                 </Form>
                 )}
-                <Button onClick={handleCommentToggle} basic color='red' size="mini" circular>
-                    Post Comment
+                <Button onClick={handleCommentToggle} basic color='red' size="mini" circular attached='right'>
+                    Add Comment
                 </Button>
-            </div>
             {editForm && (
                 <UpdateRecipeForm currentUser={currentUser} recipe={recipeObj} handleUpdateRecipe={handleUpdateRecipe} />
                 )}
@@ -272,7 +265,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
         
         
 
-    </div>
+    </Grid.Column>
 
         /* <div>
             <li>

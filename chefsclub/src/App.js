@@ -42,7 +42,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/88")
+    fetch("http://localhost:3006/users/106")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -149,7 +149,7 @@ function App() {
     }
 
   const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 88)
+    const currUser = users.filter((user) => user.id === 106)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }

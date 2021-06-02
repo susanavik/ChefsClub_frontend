@@ -5,9 +5,8 @@ import { Button, Segment, Image, Icon, Label, Grid, GridColumn } from 'semantic-
 
 
 function UserShowPage({ user, recipes, cooks, setCooks, like, setLike,
-    //  cooked, setCooked,
-currentUser, updateLikes, updateCooks, handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes,
-setSelectedRecipeId, onClickRecipe}) {
+currentUser, updateLikes, updateCooks, handleUpdateRecipe,
+setSelectedRecipeId, onClickRecipe, filteredCookedRecipes, filterLikedRecipes}) {
 
     let { id } = useParams();
     console.log(id)
@@ -19,7 +18,7 @@ setSelectedRecipeId, onClickRecipe}) {
 
 
     return (
-    <Grid.Column width={8}>
+    <div>
         <div>
             <Image size='small' circular centered src={user.image} alt={user.name}
                 width="130" class="rounded mb-2 img-thumbnail" /> 
@@ -33,8 +32,8 @@ setSelectedRecipeId, onClickRecipe}) {
             </Label>
         </div>
             
-        <div>
-            <ul>
+        <Grid centered>
+            <Grid.Row column={3}>
                     {user.recipes.map((recipeObj) => (
                         <UserPostContainer recipeObj={recipeObj} key={recipeObj.id}  
                         currentUser={user} updateLikes={updateLikes} 
@@ -43,10 +42,9 @@ setSelectedRecipeId, onClickRecipe}) {
                         setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe}
                         />
                     ))}
-                </ul>
-
-        </div>
-    </Grid.Column>
+                </Grid.Row>
+        </Grid>
+    </div>
     
     )
 }

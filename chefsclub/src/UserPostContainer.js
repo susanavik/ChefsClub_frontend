@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
 import {  Link } from 'react-router-dom';
-import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form, CardContent } from 'semantic-ui-react'
+import { Button, Segment, Image, Rating, Label, Grid, GridColumn, Card, Form, CardContent } from 'semantic-ui-react'
 
 function UserPostContainer({recipeObj, updateLikes, updateCooks,
 handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, currentUser }) {
         // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
+
+        console.log(currentUser.recipeObj)
+        // console.log(currentUser.cooks)
+
 
     const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
     const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
@@ -99,66 +103,7 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
 
        return (
         
-        // <div>
-        //     <li>
-        //         <img src={recipeObj.image} alt={recipeObj.name} width="400" height="240" 
-        //         frameBorder="0" className='post-image'/>
-        //         <h1>{recipeObj.name}</h1>
-        //         <p>{cooksCount}🍪</p>
-        //         <p>{likesCount}💗</p>
-        //         { like ? (
-        //         <button onClick={handleLikeClick}
-        //         className="like-button">
-        //             💗
-        //         </button>
-        //         ) : (
-        //         <button onClick={handleLikeClick}
-        //         className="like-button-active">
-        //             🤍
-        //         </button>
-        //         )
-        //         }
-        //         { cooked ? (
-        //             <div>
-        //                 <button onClick={handleCookedClick}
-        //                 className="cooked-button">
-        //                 🍪
-        //                 </button>
-        //             </div>
-        //         ) : (
-        //             <button onClick={handleCookedClick}
-        //             className="cooked-button-active">
-        //                 ⚪
-        //             </button>
-        //         )
-        //         }   
-        //     </li>
-        //     <div>
-        //         {commentForm && (
-        //             <form onSubmit={handleSubmitComment} className="new-comment">
-        //             <label>
-        //                 Cooked? Now share what you thought!
-        //                 <input type="text" name="comment" 
-        //                 onChange={(e) => setComment(e.target.value)} value={comment} />
-        //             </label>
-        //             <label>
-        //                 Star Rating: 1 - 5
-        //                 <input type="number" name="rating" 
-        //                 onChange={(e) => setStars(e.target.value)} value={stars} />
-        //             </label>
-        //             <input type="submit" value="Post" />
-        //         </form>
-        //         )}
-        //         <button onClick={handleCommentToggle}>
-        //             Post Comment
-        //         </button>
-        //     </div>
-        //         <Link to={`/recipes/${recipeObj.id}`}>
-        //             <button key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
-        //                 Show Post Details
-        //             </button>
-        //         </Link>
-        // </div>
+    <Grid.Column width={6}>
         <Card>
         <Image src={recipeObj.image} wrapped ui={false} 
         fluid label={{ as: 'a', corner: 'left', icon: 'heart' }}
@@ -189,7 +134,7 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
                 )
                 }
             { like ? (
-                    <Button onClick={handleLikeClick} basic color='red'
+                    <Button onClick={handleLikeClick} content='Liked' basic color='red'
                     className="like-button" label={{ as: 'a', basic: true, content: '27💗' }}
                      size="mini" circular>
                     likes
@@ -216,11 +161,13 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
                         onChange={(e) => setComment(e.target.value)} value={comment} />
                     </Form.Field>
                     <Form.Field>
-                        <label>
+                        <Rating icon='star' defaultRating={3} maxRating={5} 
+                        onChange={(e) => setStars(e.target.value)} value={stars}/>
+                        {/* <label>
                         Star Rating: 1 - 5
-                        </label>
-                        <input type="number" name="rating" 
-                        onChange={(e) => setStars(e.target.value)} value={stars} />
+                        </label> */}
+                        {/* <input type="number" name="rating" 
+                        onChange={(e) => setStars(e.target.value)} value={stars} /> */}
                     </Form.Field>
                    <Button type="submit">Post</Button>
                     {/* <input type="submit" value="Post" /> */}
@@ -233,7 +180,8 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
             
         </CardContent>
     </Card>
-       )
+    </Grid.Column>
+    )
 }
 
 export default UserPostContainer

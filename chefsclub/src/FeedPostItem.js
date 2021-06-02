@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom';
-import { Button, Comment, Image, Icon, Label, Grid, GridColumn, Card, CardContent, Form, Header } from 'semantic-ui-react'
+import { Button, Comment, Image, Rating, Label, Grid, GridColumn, Card, CardContent, Form, Header } from 'semantic-ui-react'
 
 function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, 
     cooks, setCooks, updateCooks, onClickRecipe, currentUser, user}) {
@@ -134,30 +134,23 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
     }
 
     return (
-       <Grid.Column width={8}>
+       <Grid.Column width={6} className="recipe-post-container">
 
-        <Card className="post-li">
-            <Header attached='right'>
+        <Card className="recipe-card">
+            <Header attached='right' as='h4'>
                 <Link to={`/users/${recipe.user.id}`}> 
                     {/* <Image src={recipe.user.image} size='medium' bordered /> */}
-                    <h3>✏️{recipe.user.name}</h3>
+                    ✏️{recipe.user.name}
                 </Link>
             </Header>
-            <Image src={recipe.image} alt={recipe.name} frameBorder="0" 
+            <div className="post-image-container">
+             <Image src={recipe.image} alt={recipe.name} frameBorder="0" 
                 className='post-image' size='medium' rounded/>
-            
-            <Card.Content>
-                <Link to={`/recipes/${recipe.id}`}>
-                    <Header as='h2' color='pink' onClick={() => onClickRecipe(recipe.id)}>
-                        {recipe.name}
-                    </Header>
-                </Link>
-                
-            <Button.Group circlar size='mini'>
+            <Button.Group circlar size='mini' floated='right'>
                     { like ? (
-                        <Button onClick={handleLikeClick} basic color='red'
+                        <Button onClick={handleLikeClick} content='Liked' basic color='red'
                         className="like-button" label={{ as: 'a', basic: true, content: '27💗' }}
-                         size="mini" circular>
+                         size="mini" circular >
                         likes
                         </Button>
                         ) : (
@@ -167,8 +160,6 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                         </Button>
                         )
                     }
-               
-                
                     { cooked ? (
                         <Button onClick={handleCookedClick}
                     className="cooked-button" content='Cooked' basic color='red'
@@ -182,8 +173,17 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                         </Button>
                     )
                     }
-                
                 </Button.Group>
+            </div>
+            
+            <Card.Content>
+                <Link to={`/recipes/${recipe.id}`}>
+                    <Header as='h4' color='pink' onClick={() => onClickRecipe(recipe.id)}>
+                        {recipe.name}
+                    </Header>
+                </Link>
+                
+            
             </Card.Content>
             
             <Card.Content>
@@ -191,16 +191,12 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                     {comments && (
                         <Comment.Content>
                         {commentObj}
-                        
                     </Comment.Content>
                     )}
                     <Button className="show-toggle" onClick={handleShowComment} 
-                    basic color='red' circular size="mini">
+                    basic color='red' circular size="mini" attached='left'>
                             See Comments
                     </Button>
-                </Card.Meta>
-
-                <Card.Meta>
                 {commentForm && (
                     <Form onSubmit={handleSubmitComment} className="new-comment">
                         <Form.Field>
@@ -211,11 +207,10 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                             onChange={(e) => setComment(e.target.value)} value={comment} />
                         </Form.Field>
                         <Form.Field>
-                            <label>
-                            Star Rating: 1 - 5
-                            </label>
-                            <input type="number" name="rating" 
-                            onChange={(e) => setStars(e.target.value)} value={stars} />
+                            <Rating icon='star' defaultRating={3} maxRating={5} 
+                            onChange={(e) => setStars(e.target.value)} value={stars}/>
+                            {/* <input type="number" name="rating" 
+                            onChange={(e) => setStars(e.target.value)} value={stars} /> */}
                         </Form.Field>
                        <Button type="submit" circular size='mini' color='red'>
                            Post
@@ -223,9 +218,8 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
                         
                     </Form>
                     )}
-                </Card.Meta>
-                <Card.Meta>
-                    <Button onClick={handleCommentToggle} basic color='red' size="mini" circular>
+                
+                    <Button onClick={handleCommentToggle} basic color='red' size="mini" circular attached='right'>
                         Comment
                     </Button>
                 </Card.Meta> 

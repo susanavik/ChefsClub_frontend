@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Redirect, Route, Link} from 'react-router-dom';
 // import MyProfile from './Home'
-import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form } from 'semantic-ui-react'
+import { Button, Segment, Image, Input, Label, Grid, GridColumn, Card, Form } from 'semantic-ui-react'
 
 
 
@@ -70,28 +70,19 @@ function Login({recipes}) {
         <div className="logincontainer">
             <iframe src="https://giphy.com/embed/WxMBQU7IS82Q0" 
             width="400" height="240" framBorder="0" className='giphy' allowFullScreen></iframe>
-            <h3>Log in here</h3>
-            <Form onSubmit={HandleLogin} size='small'>
-            <Form.Field>
-              <label>Enter Username</label>
-              <input type='username' />
-            </Form.Field>
-            <Form.Field>
-              <label>Enter Password</label>
-              <input type='password' />
-            </Form.Field>
-            <Link to='/home'>
-                <Button type="submit">Let's get cookin</Button>
-            </Link>
-                
-            </Form>
+            <h3 className='login-title'>LOGIN HERE</h3>
+            <Form onSubmit={HandleLogin}>
+              <Form.Group widths='equal' inline>
+                <Form.Input fluid label='USERNAME' placeholder='your username' className='login-input'/>
+                <Form.Input fluid label='PASSWORD' placeholder='your password' className='login-input'/>
+              </Form.Group>
+              <Link to='/home'>
+                <Form.Button color='red' className='login-button'>Let's get cookin</Form.Button>
+              </Link>
+            </Form>  
+              
         </div>
-        // <input type="text" placeholder="my username" onChange={handleChange} />
-        // <label>
-        //     <p>Password</p>
-        // </label>
-        // <input type="text" placeholder="my password" onChange={handleChange} />
-
+      
     )
 }
 

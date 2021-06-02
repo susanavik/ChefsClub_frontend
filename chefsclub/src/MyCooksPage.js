@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
-import MyCooksCard from './MyCooksCard'
+
 import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card, Form, CardGroup, Feed, CardContent} from 'semantic-ui-react'
 
 function MyCooksPage({currentUser, onClickRecipeId}) {

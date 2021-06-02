@@ -11,14 +11,14 @@ function Home({recipes, setRecipes, currentUser, cooks,
     updateLikes, handleUpdateRecipe, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 88)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 106)
     
-    // function handleCookRecipe(id) {
-    //     const updatedRecipes = recipes.map((recipe) => {
-    //       return recipe.id === id ? { ...recipe, isCooked: true } : recipe;
-    //     })
-    //     setRecipes(updatedRecipes);
-    // }
+    function handleCookRecipe(id) {
+        const updatedRecipes = recipes.map((recipe) => {
+          return recipe.id === id ? { ...recipe, isCooked: true } : recipe;
+        })
+        setRecipes(updatedRecipes);
+    }
 
     return (
         <div class="home-page">
@@ -33,6 +33,7 @@ function Home({recipes, setRecipes, currentUser, cooks,
                 <Label className="user-name">
                      ✏️ Welcome2SuCasa
                 </Label>
+            </div>
                 <nav className="profile-nav-bar" attached="top">
                 <Button.Group className='header-btn'>
                     <Link to='/home'>
@@ -46,17 +47,20 @@ function Home({recipes, setRecipes, currentUser, cooks,
                     </Link>
                 </Button.Group>
                 </nav>
-                <ul>
-                    {filteredRecipes.map((recipeObj) => (
-                        <MyPostContainer recipeObj={recipeObj} key={recipeObj.id} 
-                        cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} cooked={cooked} 
-                        setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} 
-                        updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe} onRemoveRecipe={onRemoveRecipe}
-                        filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes}
-                        setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe}
-                        />
-                    ))}
-                </ul>
+            <div>
+                <Grid centered>
+                    <Grid.Row column={2} className="home-post-container">
+                        {filteredRecipes.map((recipeObj) => (
+                            <MyPostContainer recipeObj={recipeObj} key={recipeObj.id} 
+                            cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} cooked={cooked} 
+                            setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} 
+                            updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe} onRemoveRecipe={onRemoveRecipe}
+                            filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes}
+                            setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe}
+                            />
+                        ))}
+                    </Grid.Row>
+                </Grid>
             </div>
         </div>
             
