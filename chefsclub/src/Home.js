@@ -9,9 +9,9 @@ import { Button, Segment, Image, Icon, Label, Grid, GridColumn, Card } from 'sem
 function Home({recipes, setRecipes, currentUser, cooks, 
     setCooks, like, setLike, cooked, setCooked, users, updateCooks, 
     updateLikes, handleUpdateRecipe, onRemoveRecipe, 
-    filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe}) {
+    filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, cookedRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 106)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 115)
     
     function handleCookRecipe(id) {
         const updatedRecipes = recipes.map((recipe) => {
@@ -56,7 +56,7 @@ function Home({recipes, setRecipes, currentUser, cooks,
                             setCooked={setCooked} currentUser={currentUser} updateLikes={updateLikes} 
                             updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe} onRemoveRecipe={onRemoveRecipe}
                             filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes}
-                            setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe}
+                            setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe} cookedRecipe={cookedRecipe}
                             />
                         ))}
                     </Grid.Row>

@@ -42,7 +42,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/106")
+    fetch("http://localhost:3006/users/115")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -100,9 +100,19 @@ function App() {
   }
 
   function updateCooks(cookObject) {
-    setCookedRecipe(cookObject)
+    // setCookedRecipe(cookObject)
+    setCooks([...cooks, cookObject])
     console.log(cookObject)
     // setCooked(!cooked)
+  }
+
+  function updateCooksByRecipe(cookRecipeObj) {
+    console.log(cookRecipeObj)
+    // const cookedRecipe = recipes.map((recipe) => 
+    //     recipe.cooks.map((cook) => cook.id === cookRecipeObj.id) ? cookRecipeObj : recipe
+    // )
+    // setCooks(cookedRecipe)
+    
   }
 
   function onRemoveRecipe(id) {
@@ -131,7 +141,9 @@ function App() {
       }
       })
       console.log(cookedRecipes)
-      setCookedRecipes(cookedRecipes)
+      console.log(cooked)
+      // setCookedRecipes(cookedRecipes)
+      setCooks([...cooks, cooked])
     }
 
     function filterLikedRecipes(likedObj) {
@@ -149,7 +161,7 @@ function App() {
     }
 
   const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 106)
+    const currUser = users.filter((user) => user.id === 115)
     // console.log({currUser, users, currentUser})
     setCurrentUser(currUser)
   }
@@ -170,7 +182,7 @@ function App() {
             <FeedContainer recipes={recipes} onUpdateRecipe={handleUpdateRecipe} currentUser={currentUser}
             cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} 
             onClickRecipe={setSelectedRecipeId} onClickUserId={setSelectedUserId}
-            user={selectedUser}/>
+            user={selectedUser} updateCooksByRecipe={updateCooksByRecipe} filteredCookedRecipes={filteredCookedRecipes}/>
           </Route>
           <Route exact path='/myfeed/:id'>
               <Header />
@@ -181,11 +193,12 @@ function App() {
           </Route>
           <Route exact path='/home'>
             <Header />
-            <Home recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
+            <Home recipes={recipes} setRecipes={setRecipes} 
+            currentUser={currentUser}
             handleUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} users={users} updateCooks={updateCooks} onRemoveRecipe={onRemoveRecipe}
             filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes} 
-            onClickUserId={setSelectedUserId} onClickRecipe={setSelectedRecipeId} 
+            onClickUserId={setSelectedUserId} onClickRecipe={setSelectedRecipeId} cookedRecipe={cookedRecipe}
             />
             
           </Route>
@@ -196,7 +209,9 @@ function App() {
           </Route>
           <Route exact path='/users/:id'>
             <Header />
-            <UserShowPage recipes={recipes} setRecipes={setRecipes} currentUser={currentUser}
+            <UserShowPage recipes={recipes} 
+            // setRecipes={setRecipes} 
+            // currentUser={currentUser}
             handleUpdateRecipe={handleUpdateRecipe} updateLikes={updateLikes} onUpdateCook={handleCooked}
             cooks={cooks} setCooks={setCooks} updateCooks={updateCooks} onRemoveRecipe={onRemoveRecipe}
             filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes} 
@@ -213,18 +228,22 @@ function App() {
               
           </Route>
           <Route exact path='/mylikes'>
+              <Header />
               <MyLikesPage recipes={likedRecipe} currentUser={currentUser}
               onClickRecipeId={setSelectedUserId} />
           </Route>
           <Route exact path='/mycooks'>
+            <Header />
               <MyCooksPage 
               recipes={cookedRecipes} currentUser={currentUser} 
-              onClickUserId={setSelectedUserId} onClickRecipeId={setSelectedUserId}/>
+              onClickUserId={setSelectedUserId} onClickRecipeId={setSelectedUserId}
+              cookedRecipe={cookedRecipe} updateCooks={updateCooks}/>
           </Route>
             <Route exact path='/recipes/:id'>
+              <Header />
                 <PostItem recipes={recipes}
                 recipe={selectedRecipe} 
-                onClickUserId={setSelectedUserId} users={users}/>
+                onClickUserId={setSelectedUserId} users={users} cookedRecipe={cookedRecipe}/>
               </Route>
         </Switch>
       </BrowserRouter>

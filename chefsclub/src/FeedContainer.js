@@ -3,7 +3,7 @@ import FeedPostItem from './FeedPostItem';
 import {  Grid, GridColumn, Card, CardContent, Form, Header, Icon } from 'semantic-ui-react'
 
 function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setLike, 
-    cooked, setCooked, updateCooks, onClickRecipe, currentUser, user}) {
+    cooked, setCooked, updateCooks, onClickRecipe, currentUser, user, updateCooksByRecipe, filteredCookedRecipes}) {
 
     // console.log(recipes)
     
@@ -35,7 +35,8 @@ function FeedContainer({recipes, handleUpdateRecipe, cooks, setCooks, like, setL
                             <FeedPostItem key={recipe.id} recipe={recipe} updateCooks={updateCooks}
                             cooks={cooks} setCooks={setCooks} like={like} setLike={setLike} 
                             cooked={cooked} setCooked={setCooked} onClickRecipe={onClickRecipe} 
-                            currentUser={currentUser} user={user}/>
+                            currentUser={currentUser} user={user} updateCooksByRecipe={updateCooksByRecipe}
+                            filteredCookedRecipes={filteredCookedRecipes}/>
                         ))}
             
             </Grid.Row>

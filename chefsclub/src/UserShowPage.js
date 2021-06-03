@@ -5,12 +5,32 @@ import { Button, Segment, Image, Icon, Label, Grid, GridColumn } from 'semantic-
 
 
 function UserShowPage({ user, recipes, cooks, setCooks, like, setLike,
-currentUser, updateLikes, updateCooks, handleUpdateRecipe,
+currentUser, updateLikes, updateCooks, handleUpdateRecipe, users,
 setSelectedRecipeId, onClickRecipe, filteredCookedRecipes, filterLikedRecipes}) {
 
     let { id } = useParams();
     console.log(id)
     console.log(user.recipes)
+
+    console.log(recipes)
+    
+    
+    // console.log(user.recipes)
+    // console.log(currentUser.recipes)
+
+    const result = recipes.filter(recipe => {
+        if (recipe.user.id === user.id)
+        return recipe
+    })
+    
+    console.log(result)
+    
+    // const usersId = recipes.map((recipe) => {
+    //     if (recipe.user.id === id)
+    //     return recipe
+    //     else return null
+    // })
+
 
     // const ingredientObj = recipe.recipe_ingredients.map((item) => {
     //     return <li>{item.measurement} {item.ingredient.name}</li> 
@@ -32,17 +52,34 @@ setSelectedRecipeId, onClickRecipe, filteredCookedRecipes, filterLikedRecipes}) 
             </Label>
         </div>
             
-        <Grid centered>
+        {/* <Grid centered>
             <Grid.Row column={3}>
                     {user.recipes.map((recipeObj) => (
-                        <UserPostContainer recipeObj={recipeObj} key={recipeObj.id}  
-                        currentUser={user} updateLikes={updateLikes} 
+                        <UserPostContainer 
+                        recipeObj={recipeObj} key={recipeObj.id}  
+                        theRecipe={result} key={result.id}
+                        clickedUser={user} updateLikes={updateLikes} 
                         updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe}
                         filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes}
-                        setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe}
+                        setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe} cooks={cooks}
                         />
                     ))}
-                </Grid.Row>
+            </Grid.Row>
+        </Grid> */}
+
+        <Grid centered>
+            <Grid.Row column={3}>
+                    {result.map((recipeObj) => (
+                        <UserPostContainer 
+                        recipeObj={recipeObj} key={recipeObj.id}  
+                        // theRecipe={result} key={result.id}
+                        clickedUser={user} updateLikes={updateLikes} 
+                        updateCooks={updateCooks} handleUpdateRecipe={handleUpdateRecipe}
+                        filteredCookedRecipes={filteredCookedRecipes} filterLikedRecipes={filterLikedRecipes}
+                        setSelectedRecipeId={setSelectedRecipeId} onClickRecipe={onClickRecipe} cooks={cooks}
+                        />
+                    ))}
+            </Grid.Row>
         </Grid>
     </div>
     

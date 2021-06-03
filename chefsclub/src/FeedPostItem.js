@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Switch, Link, useHistory} from 'react-router-dom'
 import { Button, Comment, Image, Rating, Label, Grid, GridColumn, Card, CardContent, Form, Header } from 'semantic-ui-react'
 
 function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe, 
-    cooks, setCooks, updateCooks, onClickRecipe, currentUser, user}) {
+    cooks, setCooks, updateCooks, onClickRecipe, currentUser, user, updateCooksByRecipe, filteredCookedRecipes}) {
 
-    console.log(user)
+    // console.log(recipe.cooks)
 
     // console.log(recipe)
     const [details, setDetails] = useState(false)
@@ -59,15 +59,18 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
 
         setCooksCount(cooksCount+1)
 
-        fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
-            method: 'PATCH',
-            haeders: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedCooks)
-        })
-        .then(response => response.json())
-        .then(updateCooks)
+        // fetch(`http://127.0.0.1:3006/recipes/${recipe.id}`, {
+        //     method: 'PATCH',
+        //     haeders: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(updatedCooks)
+        // })
+        // .then(response => response.json())
+        // .then((data) => {
+        //     updateCooks(data)
+        //     updateCooksByRecipe(data)
+        // })
     }
 
 
@@ -101,12 +104,25 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
         })
 
         .then(response => response.json())
-        .then(updateCooks)
+        .then((data) => {
+            // updateCooks(data)
+            filteredCookedRecipes(data)
+        })
+            
     }
     
     function showPostDetails(id) {
         history.push(`/myfeed/${recipe.id}`)
     }
+
+    const findTheComment = recipe.cooks.map((cook) => {
+        if (recipe.id === cook.recipe_id)
+            return cook
+        else 
+            return recipe
+    })
+
+    console.log(findTheComment)
 
     const commentObj = recipe.cooks.map((cook) => {
         // return <li>I give this recipe {cook.stars || 0} 🌟! {cook.comment} </li>
@@ -134,7 +150,7 @@ function FeedPostItem({recipe, onUpdateRecipe, handleUpdateRecipe,
     }
 
     return (
-       <Grid.Column width={6} className="recipe-post-container">
+       <Grid.Column width={4} className="recipe-post-container">
 
         <Card className="recipe-card">
             <Header attached='right' as='h4'>

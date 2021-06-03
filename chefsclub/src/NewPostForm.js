@@ -1,5 +1,6 @@
 import React, {useState, useDebugValue} from 'react'
 import Modal from 'react-modal'
+import { Link } from 'react-router-dom';
 // import {Form, Button, FormGroup, FormSelect} from 'react-bootstrap';
 // import { MultiSelect } from '@material-ui/core';
 import { Multiselect } from 'multiselect-react-dropdown';
@@ -67,7 +68,7 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
 
         .then(response => response.json())
         .then(recipe => {
-            // addRecipe(recipe)
+            addRecipe(recipe)
             console.log(recipe)
         })
 
@@ -141,13 +142,18 @@ function NewPostForm({addRecipe, addRecipeIngredients, currentUser, onUpdateCook
                 </Form.Field>
                 <Form.TextArea label='Magic Ingredients🎟️' placeholder='Add your ingredients...' 
                 value={recipeIngredients} onChange={(e) => setRecipeIngredients(e.target.value)}/>
-                <Button className="save-button" variant="primary" type="submit" color='pink'>
-                    Save Recipe
-                </Button>
+                
+                    <Button className="save-button" variant="primary" type="submit" color='pink'>
+                        Save Recipe
+                    </Button>
+                
                 {/* <ul>
                     <li>{measurement} {ingredient} </li>
                 </ul> */}
             </Form>
+            <Link to='/home'>
+                <Button className="save-button" color='pink' inverted>Let's see that recipe!</Button>
+            </Link>
             {/* <h5>Don't see you deloved Ingredient? Add it here! </h5> */}
             {/* {newIngredientForm && (
             <Form onSubmit={handleIngredientSubmit} className="new-ingredients">

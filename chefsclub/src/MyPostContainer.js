@@ -6,7 +6,7 @@ import { Button, Comment, Image, Rating, Label, Grid, GridColumn, Card, CardCont
 
 function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, setCooks, 
     currentUser, updateCooks, updateLikes, onRemoveRecipe, 
-    filteredCookedRecipes, filterLikedRecipes, onClickRecipe}) {
+    filteredCookedRecipes, filterLikedRecipes, onClickRecipe, cookedRecipe}) {
 
     // console.log(recipeObj)s
     
@@ -68,27 +68,27 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
 
         console.log(recipeObj.id)
 
-        const updatedCooks = { 
-            user_id: currentUser.id,
-            recipe_id: recipeObj.id,
-        }
+        // const updatedCooks = { 
+        //     user_id: currentUser.id,
+        //     recipe_id: recipeObj.id,
+        // }
 
-        // setCooksCount(cooksCount + 1)
+        // // setCooksCount(cooksCount + 1)
 
-        fetch(`http://127.0.0.1:3006/cooks`, {
-            method: 'POST',
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedCooks)
-        })
-        .then(response => response.json())
-        .then((data) => {
-            // updateCooksArray(data)
-            updateCooks(data)
-            // setCooked(data)
-            filteredCookedRecipes(data)
-        })
+        // fetch(`http://127.0.0.1:3006/cooks`, {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(updatedCooks)
+        // })
+        // .then(response => response.json())
+        // .then((data) => {
+        //     // updateCooksArray(data)
+        //     updateCooks(data)
+        //     // setCooked(data)
+        //     filteredCookedRecipes(data)
+        // })
     }
 
     const [ratingValue, setRatingValue] = useState(0)
@@ -115,7 +115,11 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
         })
 
         .then(response => response.json())
-        .then(updateCooks)
+        .then((data) => {
+            updateCooks(data)
+            filteredCookedRecipes(data)
+            console.log(data)
+        })
     }
 
     // function handleEditRecipe(updatedRecipe) {
@@ -177,8 +181,8 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
     }
 
     return (
-    <Grid.Column width={6} className="recipe-post-container">
-        <Card className="recipe-card">
+    <Grid.Column width={4} className="recipe-post-container">
+        <Card className="my-recipe-card">
             <Image src={recipeObj.image} wrapped ui={false} 
             fluid label={{ as: 'a', corner: 'left', 
             icon: 'trash alternate outline'}} onClick={handleDeleteClick}
@@ -221,7 +225,6 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
                 </Button>
             </Card.Content>
             <CardContent>
-              
                     {comments && (
                         <Comment.Content>
                         {commentObj}

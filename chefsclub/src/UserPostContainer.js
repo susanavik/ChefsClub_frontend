@@ -1,17 +1,31 @@
 import React, {useState} from 'react'
 import {  Link } from 'react-router-dom';
-import { Button, Segment, Image, Rating, Label, Grid, GridColumn, Card, Form, CardContent } from 'semantic-ui-react'
+import { Button, Comment, Icon, Image, Rating, Label, Grid, GridColumn, Card, Form, CardContent } from 'semantic-ui-react'
 
-function UserPostContainer({recipeObj, updateLikes, updateCooks,
-handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, currentUser }) {
+function UserPostContainer({
+    recipeObj, 
+    updateLikes, updateCooks,
+handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, 
+currentUser, cooks, clickedUser, theRecipe}) {
         // const [countLikes, setCountLikes] = useState(recipe.likes.filter(like => like.id === like.id).length)
 
-        console.log(currentUser.recipeObj)
-        // console.log(currentUser.cooks)
+    console.log(currentUser)
 
+    // const oneRecipe = theRecipe.map((recipe) => recipe)
+    // console.log(oneRecipe)
+
+    // const userRecipe = currentUser.recipes.map((recipe) => recipe)
+    // console.log(userRecipe)
+    // console.log(recipeObj.user_id)
+     // console.log(currentUser.cooks)
+
+
+    // const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
+    // const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
 
     const [likesCount, setLikesCount] = useState(recipeObj.likes.length)
     const [cooksCount, setCooksCount] = useState(recipeObj.cooks.length)
+
     // const [ingredients, setIngredients] = useState([])
     const [like, setLike] = useState(false)
     const [cooked, setCooked] = useState(false)
@@ -20,7 +34,7 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
         setLike(!like)
 
         const updatedLikes = { 
-            user_id: currentUser.id,
+            user_id: 115,
             recipe_id: recipeObj.id
         }
 
@@ -49,29 +63,29 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
     function handleCookedClick() {
         setCooked(!cooked)
 
-        console.log(recipeObj.id)
+        // console.log(recipeObj.id)
 
-        const updatedCooks = { 
-            user_id: currentUser.id,
-            recipe_id: recipeObj.id,
-        }
+        // const updatedCooks = { 
+        //     user_id: currentUser.id,
+        //     recipe_id: recipeObj.id,
+        // }
 
-        // setCooksCount(cooksCount + 1)
+        setCooksCount(cooksCount + 1)
 
-        fetch(`http://127.0.0.1:3006/cooks`, {
-            method: 'POST',
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(updatedCooks)
-        })
-        .then(response => response.json())
-        .then((data) => {
-            // updateCooksArray(data)
-            updateCooks(data)
-            // setCooked(data)
-            filteredCookedRecipes(data)
-        })
+        // fetch(`http://127.0.0.1:3006/cooks`, {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-type": "application/json",
+        //     },
+        //     body: JSON.stringify(updatedCooks)
+        // })
+        // .then(response => response.json())
+        // .then((data) => {
+        //     // updateCooksArray(data)
+        //     updateCooks(data)
+        //     // setCooked(data)
+        //     filteredCookedRecipes(data)
+        // })
     }
 
     // const [ratingValue, setRatingValue] = useState(0)
@@ -98,19 +112,40 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
         })
 
         .then(response => response.json())
-        .then(updateCooks)
+        .then((data) => {
+            updateCooks(data)
+            filteredCookedRecipes(data)
+        })
     }
 
-       return (
-        
-    <Grid.Column width={6}>
-        <Card>
+    const commentObj = cooks.map((cook) => {
+        return <Comment.Content>
+            <Comment.Author as='a' color='red'>
+                <Label color='red'>{cook.user.name}</Label>
+            </Comment.Author>
+            <Comment.Text>I give this recipe {cook.stars || 0} 🌟! {cook.comment}</Comment.Text>
+        </Comment.Content>
+    })
+
+    // console.log(recipe.cooks)
+    // console.log(commentObj)
+
+    const [comments, setComments] = useState(false)
+
+    function handleShowComment() {
+        setComments(!comments)
+    }
+
+    return (
+    
+    <Grid.Column width={4} className="recipe-post-container">
+        <Card className="my-recipe-card">
         <Image src={recipeObj.image} wrapped ui={false} 
         fluid label={{ as: 'a', corner: 'left', icon: 'heart' }}
         />
         <Card.Content>
             <Card.Header>{recipeObj.name}</Card.Header>
-            < Card.Description>
+            <Card.Description>
                 <Link to={`/recipes/${recipeObj.id}`}>
                     <Button size='mini' basic color='red' key={recipeObj.id} onClick={() => onClickRecipe(recipeObj.id)}>
                         Show Post Details
@@ -150,6 +185,11 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
            
         </Card.Content>
         <CardContent>
+        {/* {comments && (
+                        <Comment.Content>
+                        {commentObj}
+                    </Comment.Content>
+        )} */}
         <div>
             {commentForm && (
                 <Form onSubmit={handleSubmitComment} className="new-comment">
@@ -181,6 +221,7 @@ handleUpdateRecipe, filteredCookedRecipes, filterLikedRecipes, setSelectedRecipe
         </CardContent>
     </Card>
     </Grid.Column>
+    
     )
 }
 
