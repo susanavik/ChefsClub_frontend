@@ -42,7 +42,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:3006/users/115")
+    fetch("http://localhost:3006/users/124")
         .then(res => res.json())
         .then((data) => {
           setCurrentUser(data)})
@@ -50,6 +50,8 @@ function App() {
         //   console.log(currentUser)
         //   filteredUsers(data)})
   }, [])
+
+  console.log(currentUser)
 
   useEffect(() => {
     fetch("http://localhost:3006/cooks")
@@ -160,11 +162,11 @@ function App() {
       })
     }
 
-  const filteredUsers = () => {
-    const currUser = users.filter((user) => user.id === 115)
-    // console.log({currUser, users, currentUser})
-    setCurrentUser(currUser)
-  }
+  // const filteredUsers = () => {
+  //   const currUser = users.filter((user) => user.id === 124)
+  //   // console.log({currUser, users, currentUser})
+  //   setCurrentUser(currUser)
+  // }
 
   const selectedRecipe = recipes.find((recipe) => recipe.id === selectedRecipeId);
   const selectedUser = users.find((user) => user.id === selectedUserId)

@@ -4,7 +4,7 @@ import { Button, Header, Image, Icon, Label, Grid, GridColumn, Card, Form, CardG
 
 
 function MyLikesPage(props) {
-    console.log("My Like", props.currentUser.likes);
+    console.log("My Like", props.currentUser);
     
     // console.log(props.onClickRecipeId)
     // console.log(props)

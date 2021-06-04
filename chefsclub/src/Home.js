@@ -11,7 +11,9 @@ function Home({recipes, setRecipes, currentUser, cooks,
     updateLikes, handleUpdateRecipe, onRemoveRecipe, 
     filteredCookedRecipes, filterLikedRecipes, setSelectedRecipeId, onClickRecipe, cookedRecipe}) {
 
-    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 115)
+    const filteredRecipes = recipes.filter((recipe) => recipe.user.id === 124)
+
+    console.log(filteredRecipes)
     
     function handleCookRecipe(id) {
         const updatedRecipes = recipes.map((recipe) => {

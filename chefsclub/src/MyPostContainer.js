@@ -184,8 +184,7 @@ function MyPostContainer({recipeObj, handleUpdateRecipe, onUpdateCook, cooks, se
     <Grid.Column width={4} className="recipe-post-container">
         <Card className="my-recipe-card">
             <Image src={recipeObj.image} wrapped ui={false} 
-            fluid label={{ as: 'a', corner: 'left', 
-            icon: 'trash alternate outline'}} onClick={handleDeleteClick}
+            fluid 
             size='medium' rounded/>
              <Button.Group floated='right' size='mini'>
                 { cooked ? (
